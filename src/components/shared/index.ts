@@ -1,5 +1,6 @@
+import { ChipList } from "./ChipList";
 import { Header } from "./Header";
 import { List } from "./List";
 
 export * from "./atoms";
-export { Header, List };
+export { ChipList, Header, List };

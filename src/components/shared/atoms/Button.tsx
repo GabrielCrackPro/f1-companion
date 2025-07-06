@@ -3,13 +3,14 @@ import {
   TextStyle,
   TouchableOpacity,
   TouchableOpacityProps,
+  View,
   ViewStyle,
 } from "react-native";
 import { Text } from "./Text";
 import { Icon, IconFamily } from "./Icon";
 import { useTheme } from "@react-navigation/native";
 
-type ButtonVariant = "primary" | "outline" | "icon";
+type ButtonVariant = "primary" | "outline" | "icon" | "chip";
 
 interface ButtonProps extends TouchableOpacityProps {
   icon?: string;
@@ -24,6 +25,7 @@ interface ButtonProps extends TouchableOpacityProps {
   textStyle?: StyleProp<TextStyle>;
   style?: StyleProp<ViewStyle>;
   onPress?: () => void;
+  onClearPress?: () => void;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -31,70 +33,70 @@ export const Button: React.FC<ButtonProps> = ({
   icon,
   iconFamily = "material-icons",
   iconPosition = "left",
-  iconSize = 30,
+  iconSize = 24,
   iconOnly = false,
   variant = "primary",
   textStyle,
   style,
   disabled,
-  activeOpacity = 1,
+  activeOpacity = 0.8,
   onPress,
+  onClearPress,
   ...props
 }) => {
   const { colors } = useTheme();
 
-  const disabledStyles: StyleProp<ViewStyle> = {
-    opacity: 0.5,
-    backgroundColor: "#ccc",
-  };
+  const isChip = variant === "chip";
 
-  const buttonStyles: StyleProp<ViewStyle> = {
-    ...(disabled && disabledStyles),
+  const buttonBaseStyle: StyleProp<ViewStyle> = {
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
+    opacity: disabled ? 0.5 : 1,
   };
 
-  const getVariantStyles = (variant: ButtonVariant): StyleProp<ViewStyle> => {
-    const variantsMap: Record<string, StyleProp<ViewStyle>> = {
-      primary: {
-        backgroundColor: colors.primary,
-        paddingHorizontal: 20,
-        paddingVertical: 8,
-        borderWidth: 1,
-        borderRadius: 18,
-      },
-      outline: {
-        backgroundColor: colors.background,
-        borderWidth: 1,
-        borderRadius: 18,
-        borderColor: colors.primary,
-        paddingHorizontal: 20,
-        paddingVertical: 8,
-      },
-      icon: {
-        padding: 8,
-      },
-    };
-
-    return variantsMap[variant];
+  const variantStyles: Record<ButtonVariant, StyleProp<ViewStyle>> = {
+    primary: {
+      backgroundColor: colors.primary,
+      paddingHorizontal: 20,
+      paddingVertical: 8,
+      borderRadius: 18,
+      borderWidth: 1,
+    },
+    outline: {
+      backgroundColor: colors.background,
+      borderColor: colors.primary,
+      borderWidth: 1,
+      borderRadius: 18,
+      paddingHorizontal: 20,
+      paddingVertical: 8,
+    },
+    icon: {
+      padding: 8,
+    },
+    chip: {
+      backgroundColor: colors.primary,
+      borderColor: colors.primary,
+      borderWidth: 1,
+      borderRadius: 18,
+      paddingVertical: 5,
+      paddingHorizontal: 13,
+    },
   };
 
-  const getIconColor = (variant: ButtonVariant) => {
-    const colorsMap: Record<string, string> = {
-      primary: colors.text,
-      outline: colors.primary,
-      icon: colors.primary,
-    };
-
-    return colorsMap[variant];
+  const iconColorMap: Record<ButtonVariant, string> = {
+    primary: colors.text,
+    outline: colors.primary,
+    icon: colors.primary,
+    chip: colors.text,
   };
 
   return (
     <TouchableOpacity
       activeOpacity={activeOpacity}
       onPress={onPress}
-      style={[buttonStyles, getVariantStyles(variant), style]}
+      style={[buttonBaseStyle, variantStyles[variant], style]}
+      disabled={disabled}
       {...props}
     >
       {icon && iconPosition === "left" && (
@@ -102,17 +104,30 @@ export const Button: React.FC<ButtonProps> = ({
           name={icon}
           family={iconFamily}
           size={iconSize}
-          color={getIconColor(variant)}
+          color={iconColorMap[variant]}
         />
       )}
-      {!iconOnly && <Text style={textStyle}>{label}</Text>}
+
+      {!iconOnly && label && <Text style={textStyle}>{label}</Text>}
+
       {icon && iconPosition === "right" && (
         <Icon
           name={icon}
           family={iconFamily}
           size={iconSize}
-          color={getIconColor(variant)}
+          color={iconColorMap[variant]}
         />
+      )}
+
+      {isChip && (
+        <TouchableOpacity activeOpacity={1} onPress={onClearPress}>
+          <Icon
+            name="close"
+            family="material-icons"
+            size={iconSize}
+            color={iconColorMap[variant]}
+          />
+        </TouchableOpacity>
       )}
     </TouchableOpacity>
   );

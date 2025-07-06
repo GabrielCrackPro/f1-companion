@@ -11,6 +11,7 @@ interface UseRacesProps {
 export const useRaces = ({ season, limit }: UseRacesProps) => {
   const [races, setRaces] = useState<Response<Race[]> | null>(null);
   const [race, setRace] = useState<Race | null>(null);
+  const [seasons, setSeasons] = useState<number[] | null>(null);
 
   const {
     get: fetchRaces,
@@ -43,8 +44,11 @@ export const useRaces = ({ season, limit }: UseRacesProps) => {
   );
 
   useEffect(() => {
+    const seasons = races?.data?.map((r) => r.season);
+    const distinctSeasons = [...new Set(seasons)];
+    setSeasons(distinctSeasons);
     getRaces();
   }, [getRaces]);
 
-  return { races, race, loading, error, getRaces, getRace };
+  return { races, seasons, race, loading, error, getRaces, getRace };
 };
