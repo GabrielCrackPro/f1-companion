@@ -1,5 +1,5 @@
 import { Header } from "./Header";
-import { Logo } from "./Logo";
+import { List } from "./List";
 
-export { Header, Logo };
-export * from "./atoms/Text";
+export * from "./atoms";
+export { Header, List };

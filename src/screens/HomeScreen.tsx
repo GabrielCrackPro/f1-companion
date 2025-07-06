@@ -1,48 +1,36 @@
-import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
-import { Text } from "../components";
-import { useRaces } from "../hooks";
 import { useState } from "react";
+import { StyleSheet, View } from "react-native";
+import { List, Text } from "../components";
+import { useRaces } from "../hooks";
+import { racesSortFields } from "../mappers";
 
 export const HomeScreen = () => {
   const [season, setSeason] = useState(2025);
 
   const { races, loading, error } = useRaces({ season });
 
-  if (loading) {
-    return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" />
-        <Text>Loading races...</Text>
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View style={styles.center}>
-        <Text>Error: {error}</Text>
-      </View>
-    );
-  }
-
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>2025 Races</Text>
-      {races?.data && races.data.length > 0 ? (
-        <FlatList
-          data={races.data}
-          keyExtractor={(item) => `${item.season}-${item.round}`}
-          renderItem={({ item }) => (
-            <View style={styles.raceItem}>
-              <Text style={styles.raceText}>
-                Round {item.round}: {item.raceName}
-              </Text>
-            </View>
-          )}
-        />
-      ) : (
-        <Text>No races found.</Text>
-      )}
+      <List
+        title={"Season " + season}
+        items={races?.data ?? []}
+        loading={loading}
+        error={error ?? undefined}
+        keyExtractor={(item) => `${item.season}-${item.round}`}
+        enableSort
+        enableSecondaryAction
+        secondaryActionLabel="Switch Season"
+        secondaryActionIcon="swap-vertical"
+        secondaryActionIconFamily="ionicons"
+        sortByItems={Object.keys(racesSortFields)}
+        renderItem={(item) => (
+          <View style={styles.raceItem}>
+            <Text style={styles.raceText}>
+              Round {item.round}: {item.raceName}
+            </Text>
+          </View>
+        )}
+      />
     </View>
   );
 };
@@ -52,11 +40,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 60,
     paddingHorizontal: 16,
-  },
-  center: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
   title: {
     fontSize: 24,

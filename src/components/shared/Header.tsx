@@ -1,14 +1,7 @@
 import { ParamListBase, RouteProp, useTheme } from "@react-navigation/native";
-import {
-  StyleProp,
-  TouchableOpacity,
-  useWindowDimensions,
-  ViewStyle,
-} from "react-native";
+import { StyleProp, useWindowDimensions, ViewStyle } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Logo } from "./Logo";
-import { Text } from "./atoms/Text";
-import { Button } from "./atoms";
+import { Button, Logo, Text } from "./atoms";
 
 interface HeaderProps {
   route: RouteProp<ParamListBase>;
@@ -32,12 +25,7 @@ export const Header: React.FC<HeaderProps> = ({ route }) => {
       <Text bold center size={20} style={{ marginHorizontal: width / 5 }}>
         {route.name}
       </Text>
-      <Button
-        iconFamily="evilicons"
-        icon="bell"
-        iconColor={colors.primary}
-        iconOnly
-      />
+      <Button variant="icon" iconFamily="evilicons" icon="bell" iconOnly />
     </SafeAreaView>
   );
 };
