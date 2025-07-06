@@ -4,6 +4,7 @@ import { useRaces } from "../../hooks";
 import { racesSortFields } from "../../mappers";
 import { List, Text } from "../shared";
 import { Race } from "../../models";
+import { RaceItem } from "./RaceItem";
 
 interface RaceListProps {
   season: number;
@@ -12,14 +13,25 @@ interface RaceListProps {
 export const RaceList: React.FC<RaceListProps> = ({ season }) => {
   const [selectedSeason, setSelectedSeason] = useState(season);
   const [visibleRaces, setVisibleRaces] = useState<Race[]>([]);
+  const [nextRaceRound, setNextRaceRound] = useState<number | null>(null);
 
   const { races, loading, error } = useRaces({ season: selectedSeason });
 
   useEffect(() => {
-    if (races) {
+    if (races?.data) {
       setVisibleRaces(races.data);
+      updateNextRace(races.data);
     }
   }, [races]);
+
+  const updateNextRace = (racesList: Race[]) => {
+    const now = new Date();
+    const upcoming = racesList
+      .filter((r) => new Date(r.date).getTime() > now.getTime())
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+    setNextRaceRound(upcoming?.[0]?.round ?? null);
+  };
 
   const handleSort = (
     sortBy: keyof typeof racesSortFields,
@@ -53,6 +65,7 @@ export const RaceList: React.FC<RaceListProps> = ({ season }) => {
 
   const handleResetFilters = () => {
     setVisibleRaces(races?.data ?? []);
+    updateNextRace(races?.data ?? []);
   };
 
   return (
@@ -68,11 +81,11 @@ export const RaceList: React.FC<RaceListProps> = ({ season }) => {
         onSort={handleSort}
         onResetFilters={handleResetFilters}
         renderItem={(item) => (
-          <View style={styles.raceItem}>
-            <Text style={styles.raceText}>
-              Round {item.round}: {item.raceName}
-            </Text>
-          </View>
+          <RaceItem
+            key={`${item.season}-${item.round}`}
+            race={item}
+            isNextRace={item.round === nextRaceRound}
+          />
         )}
       />
     </View>
@@ -84,18 +97,5 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 60,
     paddingHorizontal: 16,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 16,
-  },
-  raceItem: {
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ddd",
-  },
-  raceText: {
-    fontSize: 16,
   },
 });
