@@ -1,37 +1,54 @@
-import { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { useEffect, useState, useMemo } from "react";
+import { View } from "react-native";
 import { useRaces } from "../../hooks";
 import { racesSortFields } from "../../mappers";
 import { List, Text } from "../shared";
 import { Race } from "../../models";
 import { RaceItem } from "./RaceItem";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { useTheme } from "@react-navigation/native";
 
 interface RaceListProps {
   season: number;
 }
 
-export const RaceList: React.FC<RaceListProps> = ({ season }) => {
-  const [selectedSeason, setSelectedSeason] = useState(season);
-  const [visibleRaces, setVisibleRaces] = useState<Race[]>([]);
-  const [nextRaceRound, setNextRaceRound] = useState<number | null>(null);
+const Tabs = createMaterialTopTabNavigator();
 
-  const { races, loading, error } = useRaces({ season: selectedSeason });
+export const RaceList: React.FC<RaceListProps> = ({ season }) => {
+  const { races, loading, error } = useRaces({ season });
+  const { colors } = useTheme();
+
+  const [sortedRaces, setSortedRaces] = useState<Race[]>([]);
+  const [nextRaceRound, setNextRaceRound] = useState<number | null>(null);
 
   useEffect(() => {
     if (races?.data) {
-      setVisibleRaces(races.data);
-      updateNextRace(races.data);
+      setSortedRaces(races.data);
     }
   }, [races]);
 
-  const updateNextRace = (racesList: Race[]) => {
+  useEffect(() => {
     const now = new Date();
-    const upcoming = racesList
-      .filter((r) => new Date(r.date).getTime() > now.getTime())
+    const upcoming = sortedRaces
+      .filter((r) => new Date(r.date) > now)
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-    setNextRaceRound(upcoming?.[0]?.round ?? null);
-  };
+    setNextRaceRound(upcoming[0]?.round ?? null);
+  }, [sortedRaces]);
+
+  const pastRaces = useMemo(() => {
+    const now = new Date();
+    return sortedRaces
+      .filter((r) => new Date(r.date) < now)
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  }, [sortedRaces]);
+
+  const upcomingRaces = useMemo(() => {
+    const now = new Date();
+    return sortedRaces
+      .filter((r) => new Date(r.date) > now)
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  }, [sortedRaces]);
 
   const handleSort = (
     sortBy: keyof typeof racesSortFields,
@@ -39,7 +56,7 @@ export const RaceList: React.FC<RaceListProps> = ({ season }) => {
   ) => {
     const sortField = racesSortFields[sortBy];
 
-    const sorted = [...visibleRaces].sort((a, b) => {
+    const sorted = [...sortedRaces].sort((a, b) => {
       const aValue = a[sortField];
       const bValue = b[sortField];
 
@@ -60,19 +77,17 @@ export const RaceList: React.FC<RaceListProps> = ({ season }) => {
       return 0;
     });
 
-    setVisibleRaces(sorted);
+    setSortedRaces(sorted);
   };
 
   const handleResetFilters = () => {
-    setVisibleRaces(races?.data ?? []);
-    updateNextRace(races?.data ?? []);
+    setSortedRaces(races?.data ?? []);
   };
 
-  return (
-    <View style={styles.container}>
+  const renderTab = (racesToShow: Race[]) => () =>
+    (
       <List
-        title={"Season " + selectedSeason}
-        items={visibleRaces ?? []}
+        items={racesToShow}
         loading={loading}
         error={error ?? undefined}
         keyExtractor={(item) => `${item.season}-${item.round}`}
@@ -88,14 +103,19 @@ export const RaceList: React.FC<RaceListProps> = ({ season }) => {
           />
         )}
       />
-    </View>
+    );
+
+  return (
+    <>
+      <View style={{ backgroundColor: colors.card }}>
+        <Text center bold size={20} style={{ color: colors.text }}>
+          {season} season races
+        </Text>
+      </View>
+      <Tabs.Navigator initialRouteName="Upcoming">
+        <Tabs.Screen name="Upcoming" component={renderTab(upcomingRaces)} />
+        <Tabs.Screen name="Past" component={renderTab(pastRaces)} />
+      </Tabs.Navigator>
+    </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 60,
-    paddingHorizontal: 16,
-  },
-});

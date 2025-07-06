@@ -12,7 +12,7 @@ export type Filter = {
 };
 
 interface ListProps<T> {
-  title: string;
+  title?: string;
   items: T[];
   enableSort?: boolean;
   sortVisible?: boolean;

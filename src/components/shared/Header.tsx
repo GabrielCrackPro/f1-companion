@@ -25,7 +25,22 @@ export const Header: React.FC<HeaderProps> = ({ route }) => {
       <Text bold center size={20} style={{ marginHorizontal: width / 5 }}>
         {route.name}
       </Text>
-      <Button variant="icon" iconFamily="evilicons" icon="bell" iconOnly />
+      <Button
+        variant="icon"
+        iconFamily="evilicons"
+        icon="bell"
+        iconSize={24}
+        iconOnly
+      />
+      {route.name === "Races" && (
+        <Button
+          variant="icon"
+          iconFamily="evilicons"
+          icon="calendar"
+          iconSize={24}
+          iconOnly
+        />
+      )}
     </SafeAreaView>
   );
 };
