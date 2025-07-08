@@ -1,10 +1,9 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
-import { Button, List, SessionItem, Text } from "../../components";
+import { Button, List, SessionCountdown, SessionItem } from "../../components";
 import { useRace } from "../../hooks";
 import { RaceNavigationProp, RaceRouteProp } from "../../models";
-import { isRaceFinished } from "../../utils";
 
 export const RaceDetailScreen = () => {
   const { params } = useRoute<RaceRouteProp>();
@@ -12,6 +11,7 @@ export const RaceDetailScreen = () => {
   const { getRaceSessions } = useRace();
 
   const [raceSessions, setRaceSessions] = useState<any[] | null>(null);
+  const [next, setNext] = useState<any | null>(null);
   const [isFetching, setIsFetching] = useState(true);
 
   useEffect(() => {
@@ -20,6 +20,7 @@ export const RaceDetailScreen = () => {
       try {
         const sessions = await getRaceSessions(params.season, params.round);
         setRaceSessions(sessions);
+        setNext(sessions && sessions.find((s: any) => !s.finished));
       } catch (err: any) {
         console.error("Error fetching race sessions", err);
       } finally {
@@ -48,12 +49,13 @@ export const RaceDetailScreen = () => {
 
   return (
     <View style={{ flex: 1 }}>
+      {!params.finished && <SessionCountdown nextSession={next} />}
       <List
         items={raceSessions ?? []}
         sortVisible={false}
         countVisible={false}
         keyExtractor={(item, index) => item?.name ?? index?.toString()}
-        renderItem={(item) => <SessionItem session={item} />}
+        renderItem={(item) => <SessionItem session={item} next={next} />}
       />
       {params.finished && (
         <Button

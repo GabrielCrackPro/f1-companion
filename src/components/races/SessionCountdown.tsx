@@ -1,34 +1,61 @@
 import { useTheme } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { formatDate } from "../../utils";
+import { Session } from "../../models";
+import { formatRemainingTime, getRemainingTime } from "../../utils";
 import { Text } from "../shared";
 
 interface SessionCountdownProps {
-  nextSession?: {
-    name: string;
-    dateTime: string;
-  };
+  showLabel?: boolean;
+  nextSession?: Session;
 }
 
 export const SessionCountdown: React.FC<SessionCountdownProps> = ({
+  showLabel = true,
   nextSession,
 }) => {
   const { colors } = useTheme();
 
-  const [remaining, setRemaining] = useState(
-    getRemainingTime(nextSession?.dateTime || "")
+  const getTargetDateTime = () => {
+    if (!nextSession?.date || !nextSession?.time) return null;
+
+    const now = new Date();
+    const year = now.getFullYear();
+
+    const splitDate = nextSession.date.includes("/")
+      ? nextSession.date.split("/")
+      : nextSession.date.split("-");
+
+    let month: number, day: number;
+
+    if (splitDate.length === 2) {
+      [month, day] = splitDate.map(Number);
+    } else if (splitDate.length === 3) {
+      [, month, day] = splitDate.map(Number); // ignoramos el año
+    } else {
+      return null;
+    }
+
+    const [hour, minute] = nextSession.time.split(":").map(Number);
+
+    if ([month, day, hour, minute].some(Number.isNaN)) return null;
+
+    return new Date(year, month - 1, day, hour, minute);
+  };
+
+  const [remaining, setRemaining] = useState(() =>
+    getRemainingTime(getTargetDateTime())
   );
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setRemaining(getRemainingTime(nextSession?.dateTime || ""));
+      setRemaining(getRemainingTime(getTargetDateTime()));
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [nextSession?.dateTime]);
+  }, [nextSession?.date, nextSession?.time]);
 
-  if (remaining.total <= 0) {
+  if (!remaining || remaining.total <= 0) {
     return (
       <View style={styles.container}>
         <Text style={styles.expired}>Session has started</Text>
@@ -38,34 +65,21 @@ export const SessionCountdown: React.FC<SessionCountdownProps> = ({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>
-        Next:{" "}
-        <Text bold style={{ color: colors.primary }}>
-          {nextSession?.name}
-        </Text>{" "}
-        {formatDate(nextSession?.dateTime || "")}
-      </Text>
-      <Text style={styles.time}>
-        {`${remaining.days}:${remaining.hours}:${remaining.minutes}:${remaining.seconds}`}
-      </Text>
+      {showLabel && (
+        <Text style={styles.label}>
+          Next:{" "}
+          <Text bold style={{ color: colors.primary }}>
+            {nextSession?.name}
+          </Text>
+        </Text>
+      )}
+      <Text style={styles.time}>{formatRemainingTime(remaining)}</Text>
     </View>
   );
 };
 
-const getRemainingTime = (target: string) => {
-  const total = new Date(target).getTime() - new Date().getTime();
-
-  const seconds = Math.floor((total / 1000) % 60);
-  const minutes = Math.floor((total / 1000 / 60) % 60);
-  const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
-  const days = Math.floor(total / (1000 * 60 * 60 * 24));
-
-  return { total, days, hours, minutes, seconds };
-};
-
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 10,
     alignItems: "center",
     justifyContent: "center",
   },

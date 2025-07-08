@@ -1,4 +1,4 @@
-import { Race } from "../models";
+import { Race, Session } from "../models";
 
 export const isRaceFinished = (race: Race | null) =>
   race ? new Date(race.date).getTime() < Date.now() : false;
@@ -25,28 +25,48 @@ export const isRaceTomorrow = (race: Race | null) => {
   );
 };
 
-export const getNextSession = (race: Race | null) => {
+export const getNextSession = (race: Race | null): Session | null => {
   if (!race) return null;
 
   const sessionKeys: [keyof Race, string][] = [
     ["FirstPractice", "FP1"],
     ["SecondPractice", "FP2"],
     ["ThirdPractice", "FP3"],
-    ["SprintQualifying", "SQ"],
+    ["SprintQualifying", "Sprint Qualifying"],
     ["Sprint", "Sprint"],
     ["Qualifying", "Qualifying"],
     ["date", "Race"],
   ];
 
+  const now = new Date();
+  const currentYear = now.getFullYear();
+
   for (const [key, label] of sessionKeys) {
-    const session = race[key] as { date: string; time: string } | undefined;
+    const session = race[key] as { date?: string; time?: string } | undefined;
+
     if (!session?.date || !session?.time) continue;
 
-    const sessionTime = new Date(`${session.date}T${session.time}`);
-    if (sessionTime.getTime() > Date.now()) {
+    const [monthStr, dayStr] = session.date.split("-");
+    const [hourStr, minuteStr] = session.time.split(":");
+
+    const month = Number(monthStr?.trim());
+    const day = Number(dayStr?.trim());
+    const hour = Number(hourStr?.trim());
+    const minute = Number(minuteStr?.trim());
+
+    if (isNaN(month) || isNaN(day) || isNaN(hour) || isNaN(minute)) {
+      console.warn("Invalid session date/time format:", { session });
+      continue;
+    }
+
+    const sessionDate = new Date(currentYear, month - 1, day, hour, minute);
+
+    // Skip past sessions
+    if (sessionDate.getTime() > now.getTime()) {
       return {
         name: label,
-        dateTime: `${session.date}T${session.time}`,
+        date: session.date,
+        time: session.time,
       };
     }
   }
@@ -66,4 +86,32 @@ export const isSessionFinished = (date?: string, time?: string) => {
   const sessionDate = new Date(currentYear, month - 1, day, hours, minutes);
 
   return sessionDate.getTime() < now.getTime();
+};
+
+export const getRemainingTime = (target: Date | null) => {
+  if (!target || isNaN(target.getTime())) return null;
+
+  const total = target.getTime() - Date.now();
+
+  const seconds = Math.floor((total / 1000) % 60);
+  const minutes = Math.floor((total / 1000 / 60) % 60);
+  const hours = Math.floor((total / (1000 * 60 * 60)) % 24);
+  const days = Math.floor(total / (1000 * 60 * 60 * 24));
+
+  return { total, days, hours, minutes, seconds };
+};
+
+export const formatRemainingTime = (t: {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+}) => {
+  const pad = (n: number) => String(n).padStart(2, "0");
+
+  if (t.days > 0) {
+    return `${t.days}:${pad(t.hours)}:${pad(t.minutes)}:${pad(t.seconds)}`;
+  }
+
+  return `${pad(t.hours)}:${pad(t.minutes)}:${pad(t.seconds)}`;
 };

@@ -1,47 +1,66 @@
 import { useTheme } from "@react-navigation/native";
 import React, { useState } from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { Icon, Text } from "../shared";
+import {
+  StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from "react-native";
+import { Session } from "../../models";
 import { isSessionFinished } from "../../utils";
-
-interface Session {
-  name: string;
-  date?: string;
-  time?: string;
-}
+import { Icon, Text } from "../shared";
+import { SessionCountdown } from "./SessionCountdown";
 
 interface SessionItemProps {
   session: Session;
+  next: Session | null;
   onPress?: () => void;
 }
 
 export const SessionItem: React.FC<SessionItemProps> = ({
   session,
+  next,
   onPress,
 }) => {
   const { colors } = useTheme();
 
-  const [sessionFinished, setSessionFinished] = useState(
+  const [sessionFinished] = useState(
     isSessionFinished(session.date, session.time)
   );
+
+  const defaultStyle: StyleProp<ViewStyle> = {
+    ...styles.card,
+    backgroundColor: colors.card,
+    borderColor:
+      !sessionFinished && next?.name === session.name
+        ? colors.primary
+        : colors.border,
+    borderWidth: !sessionFinished && next?.name === session.name ? 2 : 0,
+  };
 
   return (
     <TouchableOpacity
       activeOpacity={0.85}
       onPress={onPress}
-      style={[
-        styles.card,
-        { backgroundColor: colors.card, borderColor: colors.border },
-      ]}
+      style={defaultStyle}
     >
       <View style={styles.content}>
-        <Text style={[styles.title, { color: colors.text }]}>
+        <Text style={[styles.title, { color: colors.primary }]}>
           {session.name}
         </Text>
         {session.date && !sessionFinished ? (
-          <Text style={[styles.subtitle, { color: colors.text }]}>
-            {session.date} {session.time && `• ${session.time}`}
-          </Text>
+          <View style={{ alignItems: "center", gap: 8 }}>
+            {next?.name === session.name && (
+              <SessionCountdown
+                showLabel={false}
+                nextSession={session as Session}
+              />
+            )}
+            <Text style={[styles.subtitle, { color: colors.text }]}>
+              {session.date} {session.time && `• ${session.time}`}
+            </Text>
+          </View>
         ) : (
           <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
             <Icon

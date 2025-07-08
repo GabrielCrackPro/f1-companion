@@ -1,8 +1,9 @@
 import { Circuit } from "./circuit.model";
 
 export interface Session {
-  date: string;
-  time: string;
+  name: string;
+  date?: string;
+  time?: string;
 }
 
 export interface Race {
