@@ -45,7 +45,7 @@ export const raceDetailsMapper = (
   };
 };
 
-const getSrssionName = (sessionIndex: number) => {
+const getSessionName = (sessionIndex: number) => {
   const names = [
     "FP1",
     "FP2",
@@ -56,6 +56,16 @@ const getSrssionName = (sessionIndex: number) => {
     "Sprint Qualifying",
   ];
   return names[sessionIndex];
+};
+
+const getSessionLocation = (session: any) => {
+  const circuit = session.Circuit.Location;
+  return {
+    lat: circuit.lat,
+    long: circuit.long,
+    country: circuit.country,
+    locality: circuit.locality,
+  };
 };
 
 export const sessionsMapper = (data: any) => {
@@ -72,8 +82,9 @@ export const sessionsMapper = (data: any) => {
     .filter((s: any) => s)
     .map((s: any, index: number) => ({
       ...s,
-      name: getSrssionName(index),
+      name: getSessionName(index),
       date: formatDate(s.date),
       time: formatTime(s.time),
+      location: getSessionName(index) === "Race" ? getSessionLocation(s) : null,
     }));
 };
