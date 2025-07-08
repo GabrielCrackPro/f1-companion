@@ -28,17 +28,15 @@ export const Header: React.FC<HeaderProps> = ({ route }) => {
       <Button
         variant="icon"
         iconFamily="evilicons"
-        icon="bell"
+        leftIcon="bell"
         iconSize={24}
-        iconOnly
       />
       {route.name === "Races" && (
         <Button
           variant="icon"
           iconFamily="evilicons"
-          icon="calendar"
+          leftIcon="calendar"
           iconSize={24}
-          iconOnly
         />
       )}
     </SafeAreaView>

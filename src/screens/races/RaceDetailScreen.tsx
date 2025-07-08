@@ -1,0 +1,70 @@
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, View } from "react-native";
+import { Button, List, SessionItem, Text } from "../../components";
+import { useRace } from "../../hooks";
+import { RaceNavigationProp, RaceRouteProp } from "../../models";
+import { isRaceFinished } from "../../utils";
+
+export const RaceDetailScreen = () => {
+  const { params } = useRoute<RaceRouteProp>();
+  const { navigate } = useNavigation<RaceNavigationProp>();
+  const { getRaceSessions } = useRace();
+
+  const [raceSessions, setRaceSessions] = useState<any[] | null>(null);
+  const [isFetching, setIsFetching] = useState(true);
+
+  useEffect(() => {
+    const fetchSessions = async () => {
+      setIsFetching(true);
+      try {
+        const sessions = await getRaceSessions(params.season, params.round);
+        setRaceSessions(sessions);
+      } catch (err: any) {
+        console.error("Error fetching race sessions", err);
+      } finally {
+        setIsFetching(false);
+      }
+    };
+
+    fetchSessions();
+  }, []);
+
+  const goToResults = () => {
+    navigate("Results", {
+      name: params.name,
+      season: params.season,
+      round: params.round,
+    });
+  };
+
+  if (isFetching) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  return (
+    <View style={{ flex: 1 }}>
+      <List
+        items={raceSessions ?? []}
+        sortVisible={false}
+        countVisible={false}
+        keyExtractor={(item, index) => item?.name ?? index?.toString()}
+        renderItem={(item) => <SessionItem session={item} />}
+      />
+      {params.finished && (
+        <Button
+          label="Results"
+          leftIcon="flag-checkered"
+          rightIcon="chevron-right"
+          iconFamily="material-community"
+          style={{ padding: 16, margin: 8, borderRadius: 3 }}
+          onPress={goToResults}
+        />
+      )}
+    </View>
+  );
+};

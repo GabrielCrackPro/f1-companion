@@ -1,75 +1,38 @@
+import { useNavigation, useTheme } from "@react-navigation/native";
 import React from "react";
 import {
   StyleProp,
   StyleSheet,
+  TouchableOpacity,
   View,
   ViewStyle,
-  TouchableOpacity,
 } from "react-native";
-import { useTheme } from "@react-navigation/native";
 
+import { Race, RaceNavigationProp } from "../../models";
+import {
+  formatDate,
+  formatTime,
+  getNextSession,
+  isRaceFinished,
+  isRaceToday,
+} from "../../utils";
 import { Icon, Text } from "../shared";
-import { Race } from "../../models";
 import { SessionCountdown } from "./SessionCountdown";
-import { formatDate, formatTime } from "../../utils";
 
 interface RaceItemProps {
   race: Race | null;
-  onPress?: () => void;
   isNextRace?: boolean;
 }
 
-const isRaceFinished = (race: Race | null) =>
-  race ? new Date(race.date).getTime() < Date.now() : false;
-
-const isRaceToday = (race: Race | null) => {
-  if (!race) return false;
-  const date = new Date(race.date);
-  const now = new Date();
-  return (
-    date.getDate() === now.getDate() &&
-    date.getMonth() === now.getMonth() &&
-    date.getFullYear() === now.getFullYear()
-  );
-};
-
-const getNextSession = (race: Race | null) => {
-  if (!race) return null;
-
-  const sessionKeys: [keyof Race, string][] = [
-    ["FirstPractice", "FP1"],
-    ["SecondPractice", "FP2"],
-    ["ThirdPractice", "FP3"],
-    ["SprintQualifying", "SQ"],
-    ["Sprint", "Sprint"],
-    ["Qualifying", "Qualifying"],
-    ["date", "Race"], // fallback
-  ];
-
-  for (const [key, label] of sessionKeys) {
-    const session = race[key] as { date: string; time: string } | undefined;
-    if (!session?.date || !session?.time) continue;
-
-    const sessionTime = new Date(`${session.date}T${session.time}`);
-    if (sessionTime.getTime() > Date.now()) {
-      return {
-        name: label,
-        dateTime: `${session.date}T${session.time}`,
-      };
-    }
-  }
-
-  return null;
-};
-
 export const RaceItem: React.FC<RaceItemProps> = ({
   race,
-  onPress,
   isNextRace = false,
 }) => {
   const { colors } = useTheme();
   const finished = isRaceFinished(race);
   const today = isRaceToday(race);
+
+  const { navigate } = useNavigation<RaceNavigationProp>();
 
   const containerStyle: StyleProp<ViewStyle> = {
     ...styles.container,
@@ -87,10 +50,22 @@ export const RaceItem: React.FC<RaceItemProps> = ({
 
   const nextSession = isNextRace ? getNextSession(race) : null;
 
+  const goToRace = () => {
+    if (race) {
+      navigate("Race", {
+        season: race.season,
+        round: race.round,
+        name: race.raceName,
+        finished,
+        today,
+      });
+    }
+  };
+
   return (
     <TouchableOpacity
       activeOpacity={0.8}
-      onPress={onPress}
+      onPress={goToRace}
       style={containerStyle}
     >
       {finished && (

@@ -1,23 +1,21 @@
+import { useTheme } from "@react-navigation/native";
 import {
   StyleProp,
   TextStyle,
   TouchableOpacity,
   TouchableOpacityProps,
-  View,
   ViewStyle,
 } from "react-native";
-import { Text } from "./Text";
 import { Icon, IconFamily } from "./Icon";
-import { useTheme } from "@react-navigation/native";
+import { Text } from "./Text";
 
 type ButtonVariant = "primary" | "outline" | "icon" | "chip";
 
 interface ButtonProps extends TouchableOpacityProps {
-  icon?: string;
-  iconPosition?: "left" | "right";
+  leftIcon?: string;
+  rightIcon?: string;
   iconFamily?: IconFamily;
   iconSize?: number;
-  iconOnly?: boolean;
   label?: string;
   disabled?: boolean;
   activeOpacity?: number;
@@ -30,11 +28,10 @@ interface ButtonProps extends TouchableOpacityProps {
 
 export const Button: React.FC<ButtonProps> = ({
   label,
-  icon,
+  leftIcon,
+  rightIcon,
   iconFamily = "material-icons",
-  iconPosition = "left",
   iconSize = 24,
-  iconOnly = false,
   variant = "primary",
   textStyle,
   style,
@@ -53,6 +50,7 @@ export const Button: React.FC<ButtonProps> = ({
     alignItems: "center",
     gap: 8,
     opacity: disabled ? 0.5 : 1,
+    justifyContent: leftIcon && rightIcon ? "space-between" : "center",
   };
 
   const variantStyles: Record<ButtonVariant, StyleProp<ViewStyle>> = {
@@ -99,20 +97,20 @@ export const Button: React.FC<ButtonProps> = ({
       disabled={disabled}
       {...props}
     >
-      {icon && iconPosition === "left" && (
+      {leftIcon && (
         <Icon
-          name={icon}
+          name={leftIcon}
           family={iconFamily}
           size={iconSize}
           color={iconColorMap[variant]}
         />
       )}
 
-      {!iconOnly && label && <Text style={textStyle}>{label}</Text>}
+      {label && <Text style={textStyle}>{label}</Text>}
 
-      {icon && iconPosition === "right" && (
+      {rightIcon && (
         <Icon
-          name={icon}
+          name={rightIcon}
           family={iconFamily}
           size={iconSize}
           color={iconColorMap[variant]}

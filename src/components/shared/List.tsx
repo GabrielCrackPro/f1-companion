@@ -16,12 +16,13 @@ interface ListProps<T> {
   items: T[];
   enableSort?: boolean;
   sortVisible?: boolean;
+  countVisible?: boolean;
   loading?: boolean;
   error?: string;
   sortByItems?: string[];
   onSort?: (sortBy: keyof T, order: "asc" | "desc") => void;
   renderItem: (item: T) => React.ReactElement | null;
-  keyExtractor: (item: T) => string;
+  keyExtractor: (item: T, index?: number) => string;
   onResetFilters?: () => void;
 }
 
@@ -33,6 +34,7 @@ export const List = <T,>({
   enableSort,
   sortByItems,
   sortVisible,
+  countVisible = true,
   onSort,
   renderItem,
   keyExtractor,
@@ -80,7 +82,7 @@ export const List = <T,>({
   };
 
   return (
-    <View style={styles.container}>
+    <View>
       {/* Loading */}
       {loading && (
         <View style={styles.centered}>
@@ -105,32 +107,36 @@ export const List = <T,>({
               {title}
             </Text>
             <View style={styles.headerRight}>
-              <Button
-                variant="icon"
-                iconFamily="material-icons"
-                icon={filtersOpen ? "filter-list-off" : "filter-list"}
-                iconSize={22}
-                onPress={() => setFiltersOpen((prev) => !prev)}
-              />
+              {enableSort && (
+                <Button
+                  variant="icon"
+                  iconFamily="material-icons"
+                  leftIcon={filtersOpen ? "filter-list-off" : "filter-list"}
+                  iconSize={22}
+                  onPress={() => setFiltersOpen((prev) => !prev)}
+                />
+              )}
               {isFiltering && (
                 <Button
                   variant="icon"
                   iconFamily="material-icons"
-                  icon="filter-alt-off"
+                  leftIcon="filter-alt-off"
                   iconSize={22}
                   onPress={resetFilters}
                 />
               )}
             </View>
           </View>
-          <Text
-            size={18}
-            bold
-            italic
-            style={[styles.itemCount, { color: colors.primary }]}
-          >
-            {items.length} {items.length === 1 ? "race" : "races"}
-          </Text>
+          {countVisible && (
+            <Text
+              size={18}
+              bold
+              italic
+              style={[styles.itemCount, { color: colors.primary }]}
+            >
+              {items.length} {items.length === 1 ? "race" : "races"}
+            </Text>
+          )}
 
           {/* Filters */}
           {filtersOpen &&
@@ -173,9 +179,6 @@ export const List = <T,>({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   centered: {
     padding: 16,
     alignItems: "center",
