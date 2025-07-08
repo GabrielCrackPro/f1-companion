@@ -7,6 +7,7 @@ type RaceScreen = {
   name: string;
   finished?: boolean;
   today?: boolean;
+  session?: string;
 };
 
 export type TabNavigationParamList = {

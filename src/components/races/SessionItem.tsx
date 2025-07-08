@@ -15,7 +15,7 @@ import { SessionCountdown } from "./SessionCountdown";
 interface SessionItemProps {
   session: Session;
   next: Session | null;
-  onPress?: () => void;
+  onPress?: (session: Session) => void;
 }
 
 export const SessionItem: React.FC<SessionItemProps> = ({
@@ -24,6 +24,7 @@ export const SessionItem: React.FC<SessionItemProps> = ({
   onPress,
 }) => {
   const { colors } = useTheme();
+  const pressDisabled = ["FP1", "FP2", "FP3"].includes(session.name);
 
   const [sessionFinished] = useState(
     isSessionFinished(session.date, session.time)
@@ -39,40 +40,91 @@ export const SessionItem: React.FC<SessionItemProps> = ({
     borderWidth: !sessionFinished && next?.name === session.name ? 2 : 0,
   };
 
+  const getSessionPeriod = () => {
+    const start = session.time;
+
+    if (!start) return "";
+
+    const [hourStr, minuteStr] = start.split(":");
+    const startHour = parseInt(hourStr, 10);
+    const startMinute = parseInt(minuteStr, 10);
+
+    let durationMinutes = 60;
+
+    const nameLower = session.name.toLowerCase();
+
+    if (nameLower.includes("race")) {
+      durationMinutes = 120;
+    } else if (nameLower.includes("sprint")) {
+      durationMinutes = 45;
+    } else if (
+      nameLower.includes("fp") ||
+      nameLower.includes("qualifying") ||
+      nameLower.includes("practice")
+    ) {
+      durationMinutes = 60;
+    }
+
+    const endDate = new Date();
+    endDate.setHours(startHour);
+    endDate.setMinutes(startMinute + durationMinutes);
+
+    const pad = (n: number) => n.toString().padStart(2, "0");
+
+    const endHour = pad(endDate.getHours());
+    const endMinute = pad(endDate.getMinutes());
+
+    return `${start} - ${endHour}:${endMinute}`;
+  };
+
   return (
     <TouchableOpacity
       activeOpacity={0.85}
-      onPress={onPress}
+      onPress={() => !pressDisabled && onPress?.(session)}
+      disabled={pressDisabled}
       style={defaultStyle}
     >
-      <View style={styles.content}>
-        <Text style={[styles.title, { color: colors.primary }]}>
-          {session.name}
-        </Text>
-        {session.date && !sessionFinished ? (
-          <View style={{ alignItems: "center", gap: 8 }}>
-            {next?.name === session.name && (
-              <SessionCountdown
-                showLabel={false}
-                nextSession={session as Session}
+      <View style={styles.row}>
+        <View style={styles.content}>
+          <Text style={[styles.title, { color: colors.primary }]}>
+            {session.name} {session.date}
+          </Text>
+          {session.date && !sessionFinished ? (
+            <View style={{ alignItems: "center", gap: 8 }}>
+              {next?.name === session.name && (
+                <SessionCountdown
+                  showLabel={false}
+                  nextSession={session as Session}
+                />
+              )}
+              <Text style={[styles.subtitle, { color: colors.text }]}>
+                {getSessionPeriod()}
+              </Text>
+            </View>
+          ) : (
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
+            >
+              <Icon
+                name="flag-checkered"
+                family="font-awesome-5"
+                size={16}
+                color={colors.primary}
               />
-            )}
-            <Text style={[styles.subtitle, { color: colors.text }]}>
-              {session.date} {session.time && `• ${session.time}`}
-            </Text>
-          </View>
-        ) : (
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-            <Icon
-              name="flag-checkered"
-              family="font-awesome-5"
-              size={16}
-              color={colors.primary}
-            />
-            <Text style={[styles.subtitle, { color: colors.text }]}>
-              Finished
-            </Text>
-          </View>
+              <Text style={[styles.subtitle, { color: colors.text }]}>
+                Finished
+              </Text>
+            </View>
+          )}
+        </View>
+
+        {!pressDisabled && sessionFinished && (
+          <Icon
+            name="chevron-right"
+            family="material-community"
+            size={24}
+            color={colors.primary}
+          />
         )}
       </View>
     </TouchableOpacity>
@@ -92,7 +144,13 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 2,
   },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   content: {
+    flex: 1,
     flexDirection: "column",
     alignItems: "flex-start",
   },

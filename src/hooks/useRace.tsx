@@ -3,7 +3,7 @@ import { raceDetailsMapper, racesMapper, sessionsMapper } from "../mappers";
 import { useAxios } from "./useAxios";
 
 export const useRace = () => {
-  const { getMultiple, get, loading, error } = useAxios("races");
+  const { getMultiple, loading, error } = useAxios("races");
 
   const getRaceResults = useCallback(
     async (season: number, round: number) => {

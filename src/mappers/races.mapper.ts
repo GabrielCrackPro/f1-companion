@@ -51,6 +51,7 @@ const getSrssionName = (sessionIndex: number) => {
     "FP2",
     "FP3",
     "Qualifying",
+    "Race",
     "Sprint",
     "Sprint Qualifying",
   ];
@@ -66,6 +67,7 @@ export const sessionsMapper = (data: any) => {
     race.Qualifying,
     race.Sprint,
     race.SprintQualifying,
+    race,
   ]
     .filter((s: any) => s)
     .map((s: any, index: number) => ({

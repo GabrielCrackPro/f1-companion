@@ -1,4 +1,12 @@
-import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleProp,
+  StyleSheet,
+  TextStyle,
+  View,
+  ViewStyle,
+} from "react-native";
 import { useState } from "react";
 import { Button, Icon, Text } from "./atoms";
 import { Dropdown } from "./Dropdown";
@@ -20,6 +28,9 @@ interface ListProps<T> {
   loading?: boolean;
   error?: string;
   sortByItems?: string[];
+  containerStyle?: StyleProp<ViewStyle>;
+  titleStyle?: StyleProp<TextStyle>;
+  style?: StyleProp<ViewStyle>;
   onSort?: (sortBy: keyof T, order: "asc" | "desc") => void;
   renderItem: (item: T) => React.ReactElement | null;
   keyExtractor: (item: T, index?: number) => string;
@@ -35,6 +46,9 @@ export const List = <T,>({
   sortByItems,
   sortVisible,
   countVisible = true,
+  titleStyle,
+  containerStyle,
+  style,
   onSort,
   renderItem,
   keyExtractor,
@@ -82,7 +96,7 @@ export const List = <T,>({
   };
 
   return (
-    <View>
+    <View style={containerStyle}>
       {/* Loading */}
       {loading && (
         <View style={styles.centered}>
@@ -103,9 +117,7 @@ export const List = <T,>({
       {!loading && !error && (
         <>
           <View style={styles.header}>
-            <Text bold size={24}>
-              {title}
-            </Text>
+            <Text style={titleStyle}>{title}</Text>
             <View style={styles.headerRight}>
               {enableSort && (
                 <Button
@@ -166,6 +178,7 @@ export const List = <T,>({
             data={items}
             renderItem={({ item }) => renderItem(item)}
             keyExtractor={keyExtractor}
+            style={style}
             ListEmptyComponent={() => (
               <View style={styles.empty}>
                 <Text>No data</Text>
