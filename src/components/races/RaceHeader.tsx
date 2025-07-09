@@ -106,7 +106,7 @@ export const RaceHeader: React.FC<RaceHeaderProps> = ({
           {label}
         </Text>
       </View>
-      {!finished && (
+      {!finished && !isResults && (
         <Button
           variant="icon"
           leftIcon={eventAdded ? "calendar-arrow-right" : "calendar-plus-o"}
