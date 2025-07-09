@@ -64,7 +64,6 @@ export const RaceDetailScreen = () => {
       <RaceDetailHeader
         showHeader={!params.finished}
         sessions={raceSessions ?? []}
-        onTimeChange={() => {}}
       />
       <List
         title="Schedule"

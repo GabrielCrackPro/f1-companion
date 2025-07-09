@@ -1,67 +1,51 @@
-import { useTheme } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { Switch, Text, View } from "react-native";
-import { useTime } from "../../hooks";
-import { Button } from "../shared";
+import { View } from "react-native";
+import { Button, Clock } from "../shared";
 
 interface RaceDetailHeaderProps {
   showHeader: boolean;
-  sessions?: any[];
-  onTimeChange: (lat: number, long: number) => void;
+  sessions?: { location?: { lat: number; long: number } }[];
+  onTimeChange?: (lat: number, long: number) => void;
 }
 
 export const RaceDetailHeader: React.FC<RaceDetailHeaderProps> = ({
   showHeader,
-  sessions,
+  sessions = [],
   onTimeChange,
 }) => {
+  const [location, setLocation] = useState<{
+    lat: number;
+    long: number;
+  } | null>(null);
+
+  useEffect(() => {
+    const sessionWithLocation = sessions.find((s) => s.location);
+    if (sessionWithLocation?.location) {
+      setLocation(sessionWithLocation.location);
+    }
+  }, [sessions]);
+
   if (!showHeader) return null;
 
-  const { isTrackTime, toggleTrackTime } = useTime();
-  const { colors } = useTheme();
-
-  const [location, setLocation] = useState<any>(null);
-
-  useEffect(() => {
-    const { lat, long } = sessions?.find((s: any) => s.location)?.location;
-    setLocation({ lat, long });
-  }, []);
-
-  useEffect(() => {
-    if (isTrackTime && location) {
-      onTimeChange(location.lat, location.long);
-    }
-  }, [isTrackTime, location]);
-
-  const handleTimeChange = (lat: number, long: number) => {
-    onTimeChange(lat, long);
-    toggleTrackTime();
-  };
-
   return (
-    <View
-      style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginHorizontal: 10,
-        marginTop: 20,
-      }}
-    >
-      <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-        <Switch
-          value={isTrackTime}
-          onChange={() => handleTimeChange(0, 0)}
-          thumbColor={colors.border}
-          trackColor={{ true: colors.primary, false: colors.notification }}
+    <View style={{ marginHorizontal: 10 }}>
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 8,
+            marginVertical: 8,
+          }}
+        ></View>
+        <Button
+          label="Add to calendar"
+          leftIcon="calendar-plus"
+          iconFamily="material-community"
         />
-        <Text style={{ color: colors.text }}>Track Time</Text>
       </View>
-      <Button
-        label="Add to calendar"
-        leftIcon="calendar-plus"
-        iconFamily="material-community"
-      />
+
+      <Clock lat={location?.lat ?? 0} long={location?.long ?? 0} />
     </View>
   );
 };
