@@ -134,9 +134,18 @@ export const useCalendar = () => {
     return false;
   };
 
+  const openCalendarEvent = async (eventId: string) => {
+    if (!eventId) return;
+
+    await Calendar.openEventInCalendarAsync({
+      id: eventId,
+    });
+  };
+
   return {
     addEventToCalendar,
     isEventAlreadyAdded,
     removeEventFromCalendar,
+    openCalendarEvent,
   };
 };

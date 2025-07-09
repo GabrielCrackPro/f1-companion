@@ -19,7 +19,7 @@ export const RaceHeader: React.FC<RaceHeaderProps> = ({
   const { season, round, name, finished } = route.params;
 
   const { getRaceSessions, addRaceToCalendar, loading } = useRace();
-  const { isEventAlreadyAdded } = useCalendar();
+  const { isEventAlreadyAdded, openCalendarEvent } = useCalendar();
 
   const [sessions, setSessions] = useState<
     {
@@ -36,6 +36,7 @@ export const RaceHeader: React.FC<RaceHeaderProps> = ({
   >([]);
 
   const [eventAdded, setEventAdded] = useState(false);
+  const [eventIds, setEventIds] = useState<(string | null)[]>([]);
 
   useEffect(() => {
     const loadSessions = async () => {
@@ -77,8 +78,15 @@ export const RaceHeader: React.FC<RaceHeaderProps> = ({
   const handleAddToCalendar = async () => {
     if (sessions.length === 0) return;
 
-    await addRaceToCalendar(sessions);
+    const addedEventIds = await addRaceToCalendar(sessions);
     setEventAdded(true);
+    setEventIds(addedEventIds || null);
+  };
+
+  const handleOpenCalendarEvent = async () => {
+    if (sessions.length === 0) return;
+
+    await openCalendarEvent(eventIds[0] || "");
   };
 
   return (
@@ -101,10 +109,10 @@ export const RaceHeader: React.FC<RaceHeaderProps> = ({
       {!finished && (
         <Button
           variant="icon"
-          leftIcon={eventAdded ? "calendar-check-o" : "calendar-plus-o"}
-          iconFamily="font-awesome"
-          onPress={handleAddToCalendar}
-          disabled={loading || eventAdded}
+          leftIcon={eventAdded ? "calendar-arrow-right" : "calendar-plus-o"}
+          iconFamily={eventAdded ? "material-community" : "font-awesome"}
+          onPress={eventAdded ? handleOpenCalendarEvent : handleAddToCalendar}
+          disabled={loading}
         />
       )}
     </SafeAreaView>

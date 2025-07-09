@@ -53,8 +53,8 @@ export const useRace = () => {
         date: string;
         time: string;
       }[]
-    ) => {
-      if (!sessions || sessions.length === 0) return;
+    ): Promise<(string | null)[]> => {
+      if (!sessions || sessions.length === 0) return [];
 
       const getDateWithYear = (monthDay: string, time: string) => {
         const [month, day] = monthDay.split("/").map(Number);
@@ -63,7 +63,6 @@ export const useRace = () => {
         return new Date(currentYear, month - 1, day, hours, minutes);
       };
 
-      // Orden correcto de sesiones para F1
       const sessionOrder = [
         "FP1",
         "FP2",
@@ -95,26 +94,26 @@ export const useRace = () => {
         ? `${raceLocation.locality}, ${raceLocation.country}`
         : undefined;
 
-      for (const session of sortedSessions) {
-        const startDate = getDateWithYear(session.date, session.time);
-        const endDate = new Date(startDate.getTime() + 60 * 60 * 1000); // +1 hora
+      const eventIds = await Promise.all(
+        sortedSessions.map(async ({ date, time, name }) => {
+          const startDate = getDateWithYear(date, time);
+          const endDate = new Date(startDate.getTime() + 60 * 60 * 1000);
 
-        if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
-          console.warn(
-            "Invalid date format or time",
-            session.date,
-            session.time
-          );
-          continue;
-        }
+          if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+            console.warn("Invalid date format or time", date, time);
+            return null;
+          }
 
-        await addEventToCalendar({
-          title: session.name,
-          startDate,
-          endDate,
-          location: locationStr,
-        });
-      }
+          return await addEventToCalendar({
+            title: name,
+            startDate,
+            endDate,
+            location: locationStr,
+          });
+        })
+      );
+
+      return eventIds;
     },
     [addEventToCalendar]
   );
