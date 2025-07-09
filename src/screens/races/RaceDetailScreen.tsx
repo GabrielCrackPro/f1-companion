@@ -1,13 +1,7 @@
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
-import {
-  Button,
-  List,
-  RaceDetailHeader,
-  SessionCountdown,
-  SessionItem,
-} from "../../components";
+import { Button, List, SessionCountdown, SessionItem } from "../../components";
 import { useRace } from "../../hooks";
 import { RaceNavigationProp, RaceRouteProp } from "../../models";
 
@@ -61,21 +55,11 @@ export const RaceDetailScreen = () => {
       {!params.finished && params.session === next?.name && (
         <SessionCountdown nextSession={next} />
       )}
-      <RaceDetailHeader
-        showHeader={!params.finished}
-        sessions={raceSessions ?? []}
-      />
       <List
-        title="Schedule"
         items={raceSessions ?? []}
         sortVisible={false}
         countVisible={false}
         keyExtractor={(item, index) => item?.name ?? index?.toString()}
-        titleStyle={{
-          marginVertical: 20,
-          fontSize: 20,
-          color: colors.text,
-        }}
         renderItem={(item) => (
           <SessionItem
             session={item}

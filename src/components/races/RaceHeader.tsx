@@ -1,7 +1,10 @@
+import { useEffect, useState } from "react";
+import { SafeAreaView, StyleProp, ViewStyle, View } from "react-native";
 import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
-import { SafeAreaView, StyleProp, ViewStyle } from "react-native";
 import { RaceNavigationProp, RaceRouteProp } from "../../models";
 import { Button, Text } from "../shared";
+import { useRace } from "../../hooks/useRace";
+import { useCalendar } from "../../hooks/useCalendar";
 
 interface RaceHeaderProps {
   isResults?: boolean;
@@ -11,8 +14,56 @@ export const RaceHeader: React.FC<RaceHeaderProps> = ({
   isResults = false,
 }) => {
   const { colors } = useTheme();
-  const { canGoBack, goBack } = useNavigation<RaceNavigationProp>();
-  const { params } = useRoute<RaceRouteProp>();
+  const navigation = useNavigation<RaceNavigationProp>();
+  const route = useRoute<RaceRouteProp>();
+  const { season, round, name, finished } = route.params;
+
+  const { getRaceSessions, addRaceToCalendar, loading } = useRace();
+  const { isEventAlreadyAdded } = useCalendar();
+
+  const [sessions, setSessions] = useState<
+    {
+      location?: {
+        lat: number;
+        long: number;
+        locality: string;
+        country: string;
+      };
+      name: string;
+      date: string;
+      time: string;
+    }[]
+  >([]);
+
+  const [eventAdded, setEventAdded] = useState(false);
+
+  useEffect(() => {
+    const loadSessions = async () => {
+      const loadedSessions = await getRaceSessions(season, round);
+      if (loadedSessions) setSessions(loadedSessions);
+    };
+    loadSessions();
+  }, [getRaceSessions, season, round]);
+
+  useEffect(() => {
+    if (sessions.length === 0) return;
+
+    const checkEvent = async () => {
+      const firstSession = sessions[0];
+      const [month, day] = firstSession.date.split("/").map(Number);
+      const [hours, minutes] = firstSession.time.split(":").map(Number);
+      const year = new Date().getFullYear();
+      const sessionDate = new Date(year, month - 1, day, hours, minutes);
+
+      const alreadyAdded = await isEventAlreadyAdded(
+        firstSession.name,
+        sessionDate
+      );
+      setEventAdded(alreadyAdded);
+    };
+
+    checkEvent();
+  }, [sessions, isEventAlreadyAdded]);
 
   const headerStyle: StyleProp<ViewStyle> = {
     backgroundColor: colors.card,
@@ -21,22 +72,41 @@ export const RaceHeader: React.FC<RaceHeaderProps> = ({
     alignItems: "center",
   };
 
-  const label = `${params.name} ${isResults ? " Results" : ""}`;
+  const label = `${name} ${isResults ? " Results" : ""}`;
+
+  const handleAddToCalendar = async () => {
+    if (sessions.length === 0) return;
+
+    await addRaceToCalendar(sessions);
+    setEventAdded(true);
+  };
 
   return (
     <SafeAreaView style={headerStyle}>
-      {canGoBack() && (
+      {navigation.canGoBack() && (
         <Button
           variant="icon"
           iconFamily="evilicons"
           leftIcon="chevron-left"
           iconSize={44}
-          onPress={goBack}
+          onPress={navigation.goBack}
         />
       )}
-      <Text bold center size={20} style={{ marginHorizontal: 16 }}>
-        {label}
-      </Text>
+
+      <View style={{ flex: 1, alignItems: "center" }}>
+        <Text bold center size={20} style={{ marginHorizontal: 16 }}>
+          {label}
+        </Text>
+      </View>
+      {!finished && (
+        <Button
+          variant="icon"
+          leftIcon={eventAdded ? "calendar-check-o" : "calendar-plus-o"}
+          iconFamily="font-awesome"
+          onPress={handleAddToCalendar}
+          disabled={loading || eventAdded}
+        />
+      )}
     </SafeAreaView>
   );
 };
