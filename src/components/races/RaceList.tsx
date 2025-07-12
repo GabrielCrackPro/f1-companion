@@ -98,11 +98,9 @@ export const RaceList: React.FC = () => {
       />
     );
 
-  const initialRoute = upcomingRaces.length > 0 ? "Upcoming" : "Past";
-
   return (
     <>
-      <Tabs.Navigator initialRouteName={initialRoute}>
+      <Tabs.Navigator initialRouteName="Upcoming">
         <Tabs.Screen name="Upcoming" component={renderTab(upcomingRaces)} />
         <Tabs.Screen name="Past" component={renderTab(pastRaces)} />
       </Tabs.Navigator>

@@ -1,27 +1,70 @@
-import React, { createContext, useState } from "react";
+import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
+import React, {
+  createContext,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+  type RefObject,
+} from "react";
 
 type SeasonContextType = {
   season: number;
   seasons: number[];
+  seasonSelectorOpen: boolean;
+  seasonSelectorRef: RefObject<BottomSheetMethods | null>;
   setSeason: (season: number) => void;
+  openSeasonSelector: () => void;
+  closeSeasonSelector: () => void;
+  handleSeasonSelect: (season: number) => void;
 };
 
-interface SeasonProviderProps {
-  children: React.ReactNode;
-}
-
 export const SeasonContext = createContext<SeasonContextType | null>(null);
+
+interface SeasonProviderProps {
+  children: ReactNode;
+}
 
 export const SeasonProvider: React.FC<SeasonProviderProps> = ({ children }) => {
   const currentYear = new Date().getFullYear();
 
-  const seasons = Array.from({ length: 5 }, (_, i) => currentYear - i);
+  const seasons = useMemo(
+    () => Array.from({ length: 5 }, (_, i) => currentYear - i),
+    [currentYear]
+  );
 
-  const [season, setSeason] = useState<number>(seasons[0]);
+  const [season, setSeason] = useState(seasons[0]);
+  const [seasonSelectorOpen, setSeasonSelectorOpen] = useState(false);
+
+  const bottomSheetRef = useRef<BottomSheetMethods | null>(null);
+
+  const openSeasonSelector = () => {
+    bottomSheetRef.current?.expand();
+    setSeasonSelectorOpen(true);
+  };
+
+  const closeSeasonSelector = () => {
+    bottomSheetRef.current?.close();
+    setSeasonSelectorOpen(false);
+  };
+
+  const handleSeasonSelect = (selected: number) => {
+    setSeason(selected);
+    closeSeasonSelector();
+  };
+
+  const value: SeasonContextType = {
+    season,
+    seasons,
+    seasonSelectorOpen,
+    seasonSelectorRef: bottomSheetRef,
+    setSeason,
+    openSeasonSelector,
+    closeSeasonSelector,
+    handleSeasonSelect,
+  };
 
   return (
-    <SeasonContext.Provider value={{ season, seasons, setSeason }}>
-      {children}
-    </SeasonContext.Provider>
+    <SeasonContext.Provider value={value}>{children}</SeasonContext.Provider>
   );
 };
