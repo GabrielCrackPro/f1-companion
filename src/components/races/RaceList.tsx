@@ -1,19 +1,15 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { useTheme } from "@react-navigation/native";
 import { useEffect, useMemo, useState } from "react";
-import { View } from "react-native";
-import { useRaces, useSeasonContext } from "../../hooks";
+import { useRaces } from "../../hooks";
 import { racesSortFields } from "../../mappers";
 import { Race } from "../../models";
-import { List, Text } from "../shared";
+import { List } from "../shared";
 import { RaceItem } from "./RaceItem";
 
 const Tabs = createMaterialTopTabNavigator();
 
 export const RaceList: React.FC = () => {
   const { races, loading, error } = useRaces({ limit: 25 });
-  const { colors } = useTheme();
-  const { season } = useSeasonContext();
 
   const [sortedRaces, setSortedRaces] = useState<Race[]>([]);
   const [nextRaceRound, setNextRaceRound] = useState<number | null>(null);
@@ -102,9 +98,11 @@ export const RaceList: React.FC = () => {
       />
     );
 
+  const initialRoute = upcomingRaces.length > 0 ? "Upcoming" : "Past";
+
   return (
     <>
-      <Tabs.Navigator initialRouteName="Upcoming">
+      <Tabs.Navigator initialRouteName={initialRoute}>
         <Tabs.Screen name="Upcoming" component={renderTab(upcomingRaces)} />
         <Tabs.Screen name="Past" component={renderTab(pastRaces)} />
       </Tabs.Navigator>
