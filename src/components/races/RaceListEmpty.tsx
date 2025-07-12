@@ -1,19 +1,53 @@
-import { StyleSheet, View } from "react-native";
-import { Icon, Text } from "../shared";
+import { StyleSheet, useWindowDimensions, View } from "react-native";
+import { Button, Icon, Text } from "../shared";
 import { useTheme } from "@react-navigation/native";
+import { useSeasonContext } from "../../hooks";
+import { useState } from "react";
+import { isSeasonFinished } from "../../utils";
 
-export const RaceListEmpty: React.FC = () => {
+interface RaceListEmptyProps {
+  title?: string;
+  message?: string;
+}
+
+export const RaceListEmpty: React.FC<RaceListEmptyProps> = ({
+  title = "No races to show",
+  message = "Please check back later",
+}) => {
   const { colors } = useTheme();
+  const { height } = useWindowDimensions();
+  const { season, setSeason, goToSeasonResults } = useSeasonContext();
+
+  const [seasonFinished] = useState(isSeasonFinished(season));
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { height: height / 3 }]}>
       <Icon
         name="flag-checkered"
         family="font-awesome-5"
         size={60}
         color={colors.primary}
       />
-      <Text>RaceListEmpty</Text>
+      <Text style={{ fontSize: 20, color: colors.text }}>{title}</Text>
+      <Text style={{ fontSize: 16, color: colors.text }}>{message}</Text>
+      {seasonFinished && (
+        <View style={{ gap: 8 }}>
+          <Button
+            label="Go to next season"
+            variant="primary"
+            rightIcon="chevron-forward"
+            iconFamily="ionicons"
+            onPress={() => setSeason(season + 1)}
+          />
+          <Button
+            label="See season history"
+            variant="outline"
+            leftIcon="timer-outline"
+            iconFamily="ionicons"
+            onPress={goToSeasonResults}
+          />
+        </View>
+      )}
     </View>
   );
 };
@@ -21,8 +55,8 @@ export const RaceListEmpty: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "center",
     alignItems: "center",
-    justifyContent: "space-around",
-    backgroundColor: "#fff",
+    gap: 16,
   },
 });

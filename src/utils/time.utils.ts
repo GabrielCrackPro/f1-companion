@@ -87,6 +87,12 @@ export const isSessionFinished = (date?: string, time?: string) => {
   return sessionDate.getTime() < now.getTime();
 };
 
+export const isSeasonFinished = (season: number) => {
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  return season < currentYear;
+};
+
 export const getRemainingTime = (target: Date | null) => {
   if (!target || isNaN(target.getTime())) return null;
 

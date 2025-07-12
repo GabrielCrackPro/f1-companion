@@ -2,7 +2,11 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 import { RaceHeader, SeasonSelector } from "../components";
 import { useSeasonContext } from "../hooks";
-import { RaceDetailScreen, RaceResultsScreen } from "../screens";
+import {
+  RaceDetailScreen,
+  RaceResultsScreen,
+  SeasonReasultsScreen,
+} from "../screens";
 import { HomeTabs } from "./HomeTabs";
 
 export const RootStack = () => {
@@ -32,6 +36,7 @@ export const RootStack = () => {
             header: () => <RaceHeader isResults />,
           }}
         />
+        <Stack.Screen name="SeasonResults" component={SeasonReasultsScreen} />
       </Stack.Navigator>
       <SeasonSelector
         ref={seasonSelectorRef}

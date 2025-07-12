@@ -1,4 +1,5 @@
 import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
+import { useNavigation } from "@react-navigation/native";
 import React, {
   createContext,
   useMemo,
@@ -7,6 +8,7 @@ import React, {
   type ReactNode,
   type RefObject,
 } from "react";
+import { RaceNavigationProp } from "../models";
 
 type SeasonContextType = {
   season: number;
@@ -17,6 +19,7 @@ type SeasonContextType = {
   openSeasonSelector: () => void;
   closeSeasonSelector: () => void;
   handleSeasonSelect: (season: number) => void;
+  goToSeasonResults: () => void;
 };
 
 export const SeasonContext = createContext<SeasonContextType | null>(null);
@@ -26,6 +29,8 @@ interface SeasonProviderProps {
 }
 
 export const SeasonProvider: React.FC<SeasonProviderProps> = ({ children }) => {
+  const { navigate } = useNavigation<RaceNavigationProp>();
+
   const currentYear = new Date().getFullYear();
 
   const seasons = useMemo(
@@ -53,6 +58,10 @@ export const SeasonProvider: React.FC<SeasonProviderProps> = ({ children }) => {
     closeSeasonSelector();
   };
 
+  const goToSeasonResults = () => {
+    navigate("SeasonResults", { season });
+  };
+
   const value: SeasonContextType = {
     season,
     seasons,
@@ -62,6 +71,7 @@ export const SeasonProvider: React.FC<SeasonProviderProps> = ({ children }) => {
     openSeasonSelector,
     closeSeasonSelector,
     handleSeasonSelect,
+    goToSeasonResults,
   };
 
   return (

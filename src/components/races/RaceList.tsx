@@ -1,46 +1,61 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { useEffect, useMemo, useState } from "react";
-import { useRaces } from "../../hooks";
+import { View } from "react-native";
+import { useRaces, useSeasonContext } from "../../hooks";
 import { racesSortFields } from "../../mappers";
 import { Race } from "../../models";
-import { List } from "../shared";
+import { List, Text } from "../shared";
 import { RaceItem } from "./RaceItem";
+import { RaceListEmpty } from "./RaceListEmpty";
+import { isSeasonFinished } from "../../utils";
 
 const Tabs = createMaterialTopTabNavigator();
 
 export const RaceList: React.FC = () => {
   const { races, loading, error } = useRaces({ limit: 25 });
+  const { season } = useSeasonContext();
 
   const [sortedRaces, setSortedRaces] = useState<Race[]>([]);
-  const [nextRaceRound, setNextRaceRound] = useState<number | null>(null);
+  const [nextRaceId, setNextRaceId] = useState<string | null>(null);
+  const [seasomFinished, setSeasonFinished] = useState(
+    isSeasonFinished(season)
+  );
 
   useEffect(() => {
-    if (races?.data) {
-      setSortedRaces(races.data);
-    }
+    if (!races?.data) return;
+
+    const now = Date.now();
+    const validRaces = races.data.filter(
+      (r) => !isNaN(new Date(r.date).getTime())
+    );
+
+    const normalizedRaces = validRaces.map((r) => ({
+      ...r,
+      round: Number(r.round),
+      season: String(r.season),
+    }));
+
+    const upcomingSorted = [...normalizedRaces]
+      .filter((r) => new Date(r.date).getTime() > now)
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+    const next = upcomingSorted[0];
+    setNextRaceId(next ? `${next.season}-${next.round}` : null);
+    setSortedRaces(normalizedRaces);
   }, [races]);
 
-  useEffect(() => {
-    const now = new Date();
-    const upcoming = sortedRaces
-      .filter((r) => new Date(r.date) > now)
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  const { pastRaces, upcomingRaces } = useMemo(() => {
+    const now = Date.now();
 
-    setNextRaceRound(upcoming[0]?.round ?? null);
-  }, [sortedRaces]);
-
-  const pastRaces = useMemo(() => {
-    const now = new Date();
-    return sortedRaces
-      .filter((r) => new Date(r.date) < now)
+    const past = sortedRaces
+      .filter((r) => new Date(r.date).getTime() <= now)
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  }, [sortedRaces]);
 
-  const upcomingRaces = useMemo(() => {
-    const now = new Date();
-    return sortedRaces
-      .filter((r) => new Date(r.date) > now)
+    const upcoming = sortedRaces
+      .filter((r) => new Date(r.date).getTime() > now)
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+    return { pastRaces: past, upcomingRaces: upcoming };
   }, [sortedRaces]);
 
   const handleSort = (
@@ -53,7 +68,6 @@ export const RaceList: React.FC = () => {
       const aValue = a[sortField];
       const bValue = b[sortField];
 
-      if (aValue == null && bValue == null) return 0;
       if (aValue == null) return 1;
       if (bValue == null) return -1;
 
@@ -74,7 +88,9 @@ export const RaceList: React.FC = () => {
   };
 
   const handleResetFilters = () => {
-    setSortedRaces(races?.data ?? []);
+    if (races?.data) {
+      setSortedRaces(races.data);
+    }
   };
 
   const renderTab = (racesToShow: Race[]) => () =>
@@ -88,22 +104,28 @@ export const RaceList: React.FC = () => {
         sortByItems={Object.keys(racesSortFields)}
         onSort={handleSort}
         onResetFilters={handleResetFilters}
-        renderItem={(item) => (
-          <RaceItem
-            key={`${item.season}-${item.round}`}
-            race={item}
-            isNextRace={item.round === nextRaceRound}
+        renderEmpty={() => (
+          <RaceListEmpty
+            title={seasomFinished ? "Season finished" : "No races to show"}
+            message={
+              seasomFinished
+                ? "This season has finished"
+                : "Please check back later"
+            }
           />
         )}
+        renderItem={(item) => {
+          const itemId = `${item.season}-${item.round}`;
+          const isNext = itemId === nextRaceId;
+          return <RaceItem key={itemId} race={item} isNextRace={isNext} />;
+        }}
       />
     );
 
   return (
-    <>
-      <Tabs.Navigator initialRouteName="Upcoming">
-        <Tabs.Screen name="Upcoming" component={renderTab(upcomingRaces)} />
-        <Tabs.Screen name="Past" component={renderTab(pastRaces)} />
-      </Tabs.Navigator>
-    </>
+    <Tabs.Navigator initialRouteName="Upcoming">
+      <Tabs.Screen name="Upcoming" component={renderTab(upcomingRaces)} />
+      <Tabs.Screen name="Past" component={renderTab(pastRaces)} />
+    </Tabs.Navigator>
   );
 };

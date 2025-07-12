@@ -14,6 +14,7 @@ export type TabNavigationParamList = {
   Home: undefined;
   Race: RaceScreen;
   Results: RaceScreen;
+  SeasonResults: { season: number };
 };
 
 export type RaceNavigationProp = NativeStackNavigationProp<

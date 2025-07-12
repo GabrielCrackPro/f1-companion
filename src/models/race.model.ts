@@ -7,7 +7,7 @@ export interface Session {
 }
 
 export interface Race {
-  season: number;
+  season: string;
   round: number;
   url: string;
   raceName: string;
