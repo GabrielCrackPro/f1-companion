@@ -61,7 +61,6 @@ export const getNextSession = (race: Race | null): Session | null => {
 
     const sessionDate = new Date(currentYear, month - 1, day, hour, minute);
 
-    // Skip past sessions
     if (sessionDate.getTime() > now.getTime()) {
       return {
         name: label,

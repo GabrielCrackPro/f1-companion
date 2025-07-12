@@ -5,6 +5,7 @@ import { RaceNavigationProp, RaceRouteProp } from "../../models";
 import { Button, Text } from "../shared";
 import { useRace } from "../../hooks/useRace";
 import { useCalendar } from "../../hooks/useCalendar";
+import { useSeasonContext } from "../../hooks";
 
 interface RaceHeaderProps {
   isResults?: boolean;
@@ -16,7 +17,8 @@ export const RaceHeader: React.FC<RaceHeaderProps> = ({
   const { colors } = useTheme();
   const navigation = useNavigation<RaceNavigationProp>();
   const route = useRoute<RaceRouteProp>();
-  const { season, round, name, finished } = route.params;
+  const { round, name, finished } = route.params;
+  const { season } = useSeasonContext();
 
   const { getRaceSessions, addRaceToCalendar, loading } = useRace();
   const { isEventAlreadyAdded, openCalendarEvent } = useCalendar();

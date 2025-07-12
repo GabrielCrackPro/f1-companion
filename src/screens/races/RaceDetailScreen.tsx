@@ -10,8 +10,6 @@ export const RaceDetailScreen = () => {
   const { navigate } = useNavigation<RaceNavigationProp>();
   const { getRaceSessions } = useRace();
 
-  const { colors } = useTheme();
-
   const [raceSessions, setRaceSessions] = useState<any[] | null>(null);
   const [next, setNext] = useState<any | null>(null);
   const [isFetching, setIsFetching] = useState(true);

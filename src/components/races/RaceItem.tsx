@@ -8,6 +8,7 @@ import {
   ViewStyle,
 } from "react-native";
 
+import { useSeasonContext } from "../../hooks";
 import { Race, RaceNavigationProp } from "../../models";
 import {
   formatDate,
@@ -32,6 +33,7 @@ export const RaceItem: React.FC<RaceItemProps> = ({
   const finished = isRaceFinished(race);
   const today = isRaceToday(race);
 
+  const { season } = useSeasonContext();
   const { navigate } = useNavigation<RaceNavigationProp>();
 
   const containerStyle: StyleProp<ViewStyle> = {
@@ -53,7 +55,7 @@ export const RaceItem: React.FC<RaceItemProps> = ({
   const goToRace = () => {
     if (race) {
       navigate("Race", {
-        season: race.season,
+        season,
         round: race.round,
         name: race.raceName,
         finished,

@@ -1,22 +1,19 @@
-import { useEffect, useState, useMemo } from "react";
-import { View } from "react-native";
-import { useRaces } from "../../hooks";
-import { racesSortFields } from "../../mappers";
-import { List, Text } from "../shared";
-import { Race } from "../../models";
-import { RaceItem } from "./RaceItem";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { useTheme } from "@react-navigation/native";
-
-interface RaceListProps {
-  season: number;
-}
+import { useEffect, useMemo, useState } from "react";
+import { View } from "react-native";
+import { useRaces, useSeasonContext } from "../../hooks";
+import { racesSortFields } from "../../mappers";
+import { Race } from "../../models";
+import { List, Text } from "../shared";
+import { RaceItem } from "./RaceItem";
 
 const Tabs = createMaterialTopTabNavigator();
 
-export const RaceList: React.FC<RaceListProps> = ({ season }) => {
-  const { races, loading, error } = useRaces({ season });
+export const RaceList: React.FC = () => {
+  const { races, loading, error } = useRaces({ limit: 25 });
   const { colors } = useTheme();
+  const { season } = useSeasonContext();
 
   const [sortedRaces, setSortedRaces] = useState<Race[]>([]);
   const [nextRaceRound, setNextRaceRound] = useState<number | null>(null);
@@ -107,11 +104,6 @@ export const RaceList: React.FC<RaceListProps> = ({ season }) => {
 
   return (
     <>
-      <View style={{ backgroundColor: colors.card }}>
-        <Text center bold size={20} style={{ color: colors.text }}>
-          {season} season races
-        </Text>
-      </View>
       <Tabs.Navigator initialRouteName="Upcoming">
         <Tabs.Screen name="Upcoming" component={renderTab(upcomingRaces)} />
         <Tabs.Screen name="Past" component={renderTab(pastRaces)} />

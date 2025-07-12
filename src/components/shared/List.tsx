@@ -1,3 +1,5 @@
+import { useTheme } from "@react-navigation/native";
+import { useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -7,33 +9,25 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import { useState } from "react";
-import { Button, Icon, Text } from "./atoms";
-import { Dropdown } from "./Dropdown";
-import { useTheme } from "@react-navigation/native";
-import { ChipList } from "./ChipList";
-
-export type Filter = {
-  type: string;
-  label: string;
-  value: string;
-};
+import { Icon, Text } from "./atoms";
+import { ListHeader } from "./ListHeader";
 
 interface ListProps<T> {
   title?: string;
   items: T[];
-  enableSort?: boolean;
-  sortVisible?: boolean;
-  countVisible?: boolean;
   loading?: boolean;
   error?: string;
+  enableSort?: boolean;
   sortByItems?: string[];
-  containerStyle?: StyleProp<ViewStyle>;
+  sortVisible?: boolean;
+  countVisible?: boolean;
   titleStyle?: StyleProp<TextStyle>;
+  containerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
-  onSort?: (sortBy: keyof T, order: "asc" | "desc") => void;
-  renderItem: (item: T) => React.ReactElement | null;
-  keyExtractor: (item: T, index?: number) => string;
+  onSort?: (key: keyof T, order: "asc" | "desc") => void;
+  renderItem: (item: T) => React.ReactElement;
+  renderEmpty?: () => React.ReactElement;
+  keyExtractor: (item: T) => string;
   onResetFilters?: () => void;
 }
 
@@ -51,6 +45,7 @@ export const List = <T,>({
   style,
   onSort,
   renderItem,
+  renderEmpty,
   keyExtractor,
   onResetFilters,
 }: ListProps<T>) => {
@@ -60,7 +55,7 @@ export const List = <T,>({
   const [sortOpen, setSortOpen] = useState(sortVisible ?? false);
   const [sortValue, setSortValue] = useState("select an option");
   const [isFiltering, setIsFiltering] = useState(false);
-  const [appliedFilters, setAppliedFilters] = useState<Filter[]>([]);
+  const [appliedFilters, setAppliedFilters] = useState<any[]>([]);
 
   const handleSortChange = (value: string) => {
     setSortValue(value);
@@ -113,83 +108,47 @@ export const List = <T,>({
         </View>
       )}
 
-      {/* Header */}
+      {/* List */}
       {!loading && !error && (
-        <>
-          <View style={styles.header}>
-            <Text style={titleStyle}>{title}</Text>
-            <View style={styles.headerRight}>
-              {enableSort && (
-                <Button
-                  variant="icon"
-                  iconFamily="material-icons"
-                  leftIcon={filtersOpen ? "filter-list-off" : "filter-list"}
-                  iconSize={22}
-                  onPress={() => setFiltersOpen((prev) => !prev)}
-                />
-              )}
-              {isFiltering && (
-                <Button
-                  variant="icon"
-                  iconFamily="material-icons"
-                  leftIcon="filter-alt-off"
-                  iconSize={22}
-                  onPress={resetFilters}
-                />
-              )}
-            </View>
-          </View>
-          {countVisible && (
-            <Text
-              size={18}
-              bold
-              italic
-              style={[styles.itemCount, { color: colors.primary }]}
-            >
-              {items.length} {items.length === 1 ? "race" : "races"}
-            </Text>
+        <FlatList
+          data={items}
+          renderItem={({ item }) => renderItem(item)}
+          keyExtractor={keyExtractor}
+          style={style}
+          stickyHeaderIndices={[0]}
+          stickyHeaderHiddenOnScroll={false}
+          StickyHeaderComponent={() => (
+            <ListHeader
+              title={title}
+              titleStyle={titleStyle}
+              filtersOpen={filtersOpen}
+              isFiltering={isFiltering}
+              sortOpen={sortOpen}
+              sortValue={sortValue}
+              countVisible={items.length > 0 && countVisible}
+              itemCount={items.length}
+              sortByItems={sortByItems}
+              enableSort={items.length > 0 && enableSort}
+              appliedFilters={appliedFilters}
+              onToggleFilters={() => setFiltersOpen((prev) => !prev)}
+              onResetFilters={resetFilters}
+              onSortChange={handleSortChange}
+              onSortVisibleToggle={() => setSortOpen((prev) => !prev)}
+              onRemoveFilter={removeFilter}
+            />
           )}
-
-          {/* Filters */}
-          {filtersOpen &&
-            enableSort &&
-            sortByItems &&
-            sortByItems?.length > 0 && (
-              <View style={styles.filters}>
-                <Dropdown
-                  options={sortByItems ?? []}
-                  visible={sortOpen}
-                  value={sortValue}
-                  label="Sort By"
-                  iconFamily="material-icons"
-                  icon="sort"
-                  onValueChange={handleSortChange}
-                  onVisibleChange={() => setSortOpen((prev) => !prev)}
-                />
-                <ChipList
-                  items={appliedFilters}
-                  onChipPress={(chip) => removeFilter(chip)}
-                />
-              </View>
-            )}
-
-          {/* List */}
-          <FlatList
-            data={items}
-            renderItem={({ item }) => renderItem(item)}
-            keyExtractor={keyExtractor}
-            style={style}
-            ListEmptyComponent={() => (
-              <View style={styles.empty}>
-                <Text>No data</Text>
-              </View>
-            )}
-          />
-        </>
+          ListEmptyComponent={renderEmpty ?? DefaultEmptyComponent}
+        />
       )}
     </View>
   );
 };
+
+const DefaultEmptyComponent: React.FC = () => (
+  <View style={styles.empty}>
+    <Text>No data</Text>
+  </View>
+);
 
 const styles = StyleSheet.create({
   centered: {

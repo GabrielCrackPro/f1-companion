@@ -8,6 +8,7 @@ import {
   FontAwesome5,
 } from "@expo/vector-icons";
 import React from "react";
+import { StyleProp, ViewStyle } from "react-native";
 
 export type IconFamily =
   | "font-awesome"
@@ -23,6 +24,7 @@ interface IconProps {
   family: IconFamily;
   size?: number;
   color?: string;
+  style?: StyleProp<ViewStyle>;
 }
 
 const iconMap: Record<IconFamily, any> = {
@@ -40,6 +42,7 @@ export const Icon: React.FC<IconProps> = ({
   size = 24,
   color = "black",
   family,
+  style,
 }) => {
   const IconComponent = iconMap[family];
 
@@ -48,5 +51,5 @@ export const Icon: React.FC<IconProps> = ({
     return null;
   }
 
-  return <IconComponent name={name} size={size} color={color} />;
+  return <IconComponent name={name} size={size} color={color} style={style} />;
 };
