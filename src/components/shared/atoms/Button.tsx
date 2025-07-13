@@ -1,4 +1,3 @@
-import { useTheme } from "@react-navigation/native";
 import {
   StyleProp,
   TextStyle,
@@ -6,6 +5,7 @@ import {
   TouchableOpacityProps,
   ViewStyle,
 } from "react-native";
+import { useCustomTheme } from "../../../hooks";
 import { Icon, IconFamily } from "./Icon";
 import { Text } from "./Text";
 
@@ -41,7 +41,7 @@ export const Button: React.FC<ButtonProps> = ({
   onClearPress,
   ...props
 }) => {
-  const { colors } = useTheme();
+  const { colors } = useCustomTheme();
 
   const isChip = variant === "chip";
 

@@ -1,5 +1,5 @@
-import { useTheme } from "@react-navigation/native";
 import { StyleProp, StyleSheet, TextStyle, View } from "react-native";
+import { useCustomTheme } from "../../hooks";
 import { Button, Text } from "./atoms";
 import { ChipList } from "./ChipList";
 import { Dropdown } from "./Dropdown";
@@ -41,7 +41,7 @@ export const ListHeader: React.FC<ListHeaderProps> = ({
   onSortVisibleToggle,
   onRemoveFilter,
 }) => {
-  const { colors } = useTheme();
+  const { colors } = useCustomTheme();
 
   return (
     <View>

@@ -1,11 +1,11 @@
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { SafeAreaView, StyleProp, ViewStyle, View } from "react-native";
-import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
+import { SafeAreaView, StyleProp, View, ViewStyle } from "react-native";
+import { useCustomTheme, useSeasonContext } from "../../hooks";
+import { useCalendar } from "../../hooks/useCalendar";
+import { useRace } from "../../hooks/useRace";
 import { RaceNavigationProp, RaceRouteProp } from "../../models";
 import { Button, Text } from "../shared";
-import { useRace } from "../../hooks/useRace";
-import { useCalendar } from "../../hooks/useCalendar";
-import { useSeasonContext } from "../../hooks";
 
 interface RaceHeaderProps {
   isResults?: boolean;
@@ -14,7 +14,7 @@ interface RaceHeaderProps {
 export const RaceHeader: React.FC<RaceHeaderProps> = ({
   isResults = false,
 }) => {
-  const { colors } = useTheme();
+  const { colors } = useCustomTheme();
   const navigation = useNavigation<RaceNavigationProp>();
   const route = useRoute<RaceRouteProp>();
   const { round, name, finished } = route.params;

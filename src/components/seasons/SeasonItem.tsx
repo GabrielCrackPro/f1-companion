@@ -1,5 +1,5 @@
-import { useTheme } from "@react-navigation/native";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { useCustomTheme } from "../../hooks";
 import { Icon, Text } from "../shared";
 
 interface SeasonItemProps {
@@ -15,7 +15,7 @@ export const SeasonItem: React.FC<SeasonItemProps> = ({
   current = false,
   onSelect,
 }) => {
-  const { colors } = useTheme();
+  const { colors } = useCustomTheme();
 
   const handleSelect = () => onSelect(season);
 

@@ -1,15 +1,15 @@
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import {
-  View,
-  TouchableOpacity,
-  Pressable,
-  StyleSheet,
   FlatList,
   LayoutRectangle,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+  View,
 } from "react-native";
+import { useCustomTheme } from "../../hooks";
 import { Icon, IconFamily } from "./atoms/Icon";
 import { Text } from "./atoms/Text";
-import { useTheme } from "@react-navigation/native";
 
 interface DropdownProps {
   options: string[];
@@ -32,7 +32,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   onValueChange,
   onVisibleChange,
 }) => {
-  const { colors } = useTheme();
+  const { colors } = useCustomTheme();
 
   const [isOpen, setIsOpen] = useState(visible);
   const [buttonLayout, setButtonLayout] = useState<LayoutRectangle | null>(

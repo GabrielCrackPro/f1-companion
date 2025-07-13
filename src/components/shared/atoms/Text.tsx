@@ -4,6 +4,7 @@ import {
   StyleProp,
   TextStyle,
 } from "react-native";
+import { useCustomTheme } from "../../../hooks";
 
 interface TextProps extends NativeTextProps {
   size?: number;
@@ -23,9 +24,11 @@ export const Text: React.FC<TextProps> = ({
   style,
   ...props
 }) => {
+  const { colors } = useCustomTheme();
+
   const defaultStyle: StyleProp<TextStyle> = {
     fontSize: 16,
-    color: "#fff",
+    color: colors.text,
   };
 
   const textStyle: StyleProp<TextStyle> = {

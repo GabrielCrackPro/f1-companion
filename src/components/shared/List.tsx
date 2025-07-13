@@ -1,4 +1,3 @@
-import { useTheme } from "@react-navigation/native";
 import { useState } from "react";
 import {
   ActivityIndicator,
@@ -9,6 +8,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
+import { useCustomTheme } from "../../hooks";
 import { Icon, Text } from "./atoms";
 import { ListHeader } from "./ListHeader";
 
@@ -49,7 +49,7 @@ export const List = <T,>({
   keyExtractor,
   onResetFilters,
 }: ListProps<T>) => {
-  const { colors } = useTheme();
+  const { colors } = useCustomTheme();
 
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(sortVisible ?? false);

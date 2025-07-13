@@ -1,17 +1,17 @@
-import { ParamListBase, RouteProp, useTheme } from "@react-navigation/native";
+import BottomSheet from "@gorhom/bottom-sheet";
+import { ParamListBase, RouteProp } from "@react-navigation/native";
+import { useRef } from "react";
 import { StyleProp, ViewStyle } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useSeasonContext } from "../../hooks";
+import { useCustomTheme, useSeasonContext } from "../../hooks";
 import { Button, Logo, Text } from "./atoms";
-import { useRef } from "react";
-import BottomSheet from "@gorhom/bottom-sheet";
 
 interface HeaderProps {
   route: RouteProp<ParamListBase>;
 }
 
 export const Header: React.FC<HeaderProps> = ({ route }) => {
-  const { colors } = useTheme();
+  const { colors } = useCustomTheme();
   const { season, openSeasonSelector } = useSeasonContext();
 
   const bottomSheetRef = useRef<BottomSheet>(null);

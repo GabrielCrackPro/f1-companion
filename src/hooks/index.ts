@@ -1,8 +1,21 @@
 import { useAxios } from "./useAxios";
 import { useCalendar } from "./useCalendar";
+import { useCustomTheme } from "./useCustomTheme";
 import { useRace } from "./useRace";
 import { useRaces } from "./useRaces";
 import { useSeasonContext } from "./useSeasonContext";
+import { useStorage } from "./useStorage";
+import { useThemeContext } from "./useThemeContext";
 import { useTime } from "./useTime";
 
-export { useAxios, useCalendar, useRace, useRaces, useSeasonContext, useTime };
+export {
+  useAxios,
+  useCalendar,
+  useCustomTheme,
+  useRace,
+  useRaces,
+  useSeasonContext,
+  useStorage,
+  useThemeContext,
+  useTime,
+};

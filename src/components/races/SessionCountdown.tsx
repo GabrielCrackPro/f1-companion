@@ -1,6 +1,6 @@
-import { useTheme } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import { useCustomTheme } from "../../hooks";
 import { Session } from "../../models";
 import { formatRemainingTime, getRemainingTime } from "../../utils";
 import { Text } from "../shared";
@@ -14,7 +14,7 @@ export const SessionCountdown: React.FC<SessionCountdownProps> = ({
   showLabel = true,
   nextSession,
 }) => {
-  const { colors } = useTheme();
+  const { colors } = useCustomTheme();
 
   const getTargetDateTime = () => {
     if (!nextSession?.date || !nextSession?.time) return null;

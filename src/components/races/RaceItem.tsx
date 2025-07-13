@@ -1,4 +1,4 @@
-import { useNavigation, useTheme } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import {
   StyleProp,
@@ -8,7 +8,7 @@ import {
   ViewStyle,
 } from "react-native";
 
-import { useSeasonContext } from "../../hooks";
+import { useCustomTheme, useSeasonContext } from "../../hooks";
 import { Race, RaceNavigationProp } from "../../models";
 import {
   formatDate,
@@ -29,7 +29,7 @@ export const RaceItem: React.FC<RaceItemProps> = ({
   race,
   isNextRace = false,
 }) => {
-  const { colors } = useTheme();
+  const { colors } = useCustomTheme();
   const finished = isRaceFinished(race);
   const today = isRaceToday(race);
 

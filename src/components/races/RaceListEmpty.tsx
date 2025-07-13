@@ -1,9 +1,8 @@
-import { StyleSheet, useWindowDimensions, View } from "react-native";
-import { Button, Icon, Text } from "../shared";
-import { useTheme } from "@react-navigation/native";
-import { useSeasonContext } from "../../hooks";
 import { useState } from "react";
+import { StyleSheet, useWindowDimensions, View } from "react-native";
+import { useCustomTheme, useSeasonContext } from "../../hooks";
 import { isSeasonFinished } from "../../utils";
+import { Button, Icon, Text } from "../shared";
 
 interface RaceListEmptyProps {
   title?: string;
@@ -14,7 +13,7 @@ export const RaceListEmpty: React.FC<RaceListEmptyProps> = ({
   title = "No races to show",
   message = "Please check back later",
 }) => {
-  const { colors } = useTheme();
+  const { colors } = useCustomTheme();
   const { height } = useWindowDimensions();
   const { season, setSeason, goToSeasonResults } = useSeasonContext();
 

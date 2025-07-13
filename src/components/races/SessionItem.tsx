@@ -1,4 +1,3 @@
-import { useTheme } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
   StyleProp,
@@ -7,6 +6,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
+import { useCustomTheme } from "../../hooks";
 import { Session } from "../../models";
 import { isSessionFinished } from "../../utils";
 import { Icon, Text } from "../shared";
@@ -23,7 +23,7 @@ export const SessionItem: React.FC<SessionItemProps> = ({
   next,
   onPress,
 }) => {
-  const { colors } = useTheme();
+  const { colors } = useCustomTheme();
   const pressDisabled = ["FP1", "FP2", "FP3"].includes(session.name);
 
   const [sessionFinished] = useState(

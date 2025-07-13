@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
-import { useTheme } from "@react-navigation/native";
+import { useCustomTheme, useTime } from "../../hooks";
 import { Text } from "./atoms";
-import { useTime } from "../../hooks";
 
 interface ClockProps {
   lat: number;
@@ -10,7 +9,7 @@ interface ClockProps {
 }
 
 export const Clock: React.FC<ClockProps> = ({ lat, long }) => {
-  const { colors } = useTheme();
+  const { colors } = useCustomTheme();
   const { getTrackTime, isLoading: isTrackLoading, error } = useTime();
 
   const [localTime, setLocalTime] = useState<string>("");

@@ -2,10 +2,9 @@ import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetFlatList,
 } from "@gorhom/bottom-sheet";
-import { useTheme } from "@react-navigation/native";
 import { forwardRef, useMemo } from "react";
 import { StyleSheet, View } from "react-native";
-import { useSeasonContext } from "../../hooks";
+import { useCustomTheme, useSeasonContext } from "../../hooks";
 import { Button, Text } from "../shared";
 import { SeasonItem } from "./SeasonItem";
 
@@ -16,7 +15,7 @@ interface SeasonSelectorProps {
 
 export const SeasonSelector = forwardRef<BottomSheet, SeasonSelectorProps>(
   ({ selectedSeason, onSeasonSelect }, ref) => {
-    const { colors } = useTheme();
+    const { colors } = useCustomTheme();
     const { seasons, closeSeasonSelector } = useSeasonContext();
 
     const currentYear = new Date().getFullYear();

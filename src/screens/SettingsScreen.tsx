@@ -1,10 +1,17 @@
 import { View } from "react-native";
-import { Text } from "../components";
+import { SettingToggle } from "../components";
+import { useCustomTheme } from "../hooks";
 
 export const SettingsScreen = () => {
+  const { mode, toggleTheme } = useCustomTheme();
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Settings</Text>
+    <View>
+      <SettingToggle
+        title="Dark Mode"
+        value={mode === "dark"}
+        description="Enable dark mode"
+        onPress={toggleTheme}
+      />
     </View>
   );
 };

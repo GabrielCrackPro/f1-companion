@@ -3,6 +3,7 @@ import { Clock } from "./Clock";
 import { Header } from "./Header";
 import { List } from "./List";
 import { ListHeader } from "./ListHeader";
+import { SettingToggle } from "./SettingToggle";
 
 export * from "./atoms";
-export { ChipList, Clock, Header, List, ListHeader };
+export { ChipList, Clock, Header, List, ListHeader, SettingToggle };
