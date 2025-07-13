@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, useMemo } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
-import { useCustomTheme } from "../../hooks";
+import { useCustomTheme } from "../../hooks/useCustomTheme";
 import { useTime } from "../../hooks/useTime";
 import { Text } from "./atoms/Text";
 

@@ -9,15 +9,7 @@ import {
 } from "@expo/vector-icons";
 import React from "react";
 import { StyleProp, ViewStyle } from "react-native";
-
-export type IconFamily =
-  | "font-awesome"
-  | "font-awesome-5"
-  | "material-community"
-  | "material-icons"
-  | "ionicons"
-  | "entypo"
-  | "evilicons";
+import { IconFamily } from "../../../types/icon.types";
 
 interface IconProps {
   name: string;

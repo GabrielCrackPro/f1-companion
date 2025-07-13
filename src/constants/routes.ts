@@ -1,4 +1,4 @@
-import { IconFamily } from "../components/shared/atoms/Icon";
+import { IconFamily } from "../types/icon.types";
 
 export const ROUTE_ICON_MAP: Record<
   string,
