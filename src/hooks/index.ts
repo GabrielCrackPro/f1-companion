@@ -5,7 +5,6 @@ import { useRace } from "./useRace";
 import { useRaces } from "./useRaces";
 import { useSeasonContext } from "./useSeasonContext";
 import { useStorage } from "./useStorage";
-import { useThemeContext } from "./useThemeContext";
 import { useTime } from "./useTime";
 
 export {
@@ -16,6 +15,7 @@ export {
   useRaces,
   useSeasonContext,
   useStorage,
-  useThemeContext,
   useTime,
 };
+
+export * from "./useAnimatedColors";

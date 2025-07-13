@@ -3,12 +3,12 @@ import { SettingToggle } from "../components";
 import { useCustomTheme } from "../hooks";
 
 export const SettingsScreen = () => {
-  const { mode, toggleTheme } = useCustomTheme();
+  const { theme, toggleTheme } = useCustomTheme();
   return (
     <View>
       <SettingToggle
         title="Dark Mode"
-        value={mode === "dark"}
+        value={theme === "dark"}
         description="Enable dark mode"
         onPress={toggleTheme}
       />

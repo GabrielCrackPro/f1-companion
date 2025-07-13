@@ -1,13 +1,14 @@
-import { useTheme as useRNTheme } from "@react-navigation/native";
-import { useThemeContext } from "./useThemeContext";
+import { useTheme } from "@react-navigation/native";
+import { useAnimatedTheme } from "../contexts/AnimatedThemeContext";
 
 export const useCustomTheme = () => {
-  const { theme, toggleTheme } = useThemeContext();
-  const nativeTheme = useRNTheme();
+  const { theme, toggleTheme, animatedColors } = useAnimatedTheme();
+  const { colors } = useTheme();
 
   return {
-    mode: theme,
-    colors: nativeTheme.colors,
+    theme,
+    colors,
+    animatedColors,
     toggleTheme,
   };
 };
