@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
-import { useCustomTheme, useTime } from "../../hooks";
-import { Text } from "./atoms";
+import { useCustomTheme } from "../../hooks";
+import { useTime } from "../../hooks/useTime";
+import { Text } from "./atoms/Text";
 
 interface ClockProps {
-  lat: number;
-  long: number;
+  lat?: number;
+  long?: number;
 }
 
 export const Clock: React.FC<ClockProps> = ({ lat, long }) => {
@@ -16,57 +17,88 @@ export const Clock: React.FC<ClockProps> = ({ lat, long }) => {
   const [trackTime, setTrackTime] = useState<string>("");
   const [isLocalLoading, setIsLocalLoading] = useState(true);
 
-  const formatTime = (date: Date | string) =>
+  const formatTime = useCallback((date: Date | string) =>
     new Date(date).toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
-    });
+    }), []);
+
+  // Memoize the coordinates to prevent unnecessary API calls
+  const coordinates = useMemo(() => ({ lat, long }), [lat, long]);
 
   useEffect(() => {
+    let isMounted = true;
+
     const updateLocal = () => {
-      setLocalTime(formatTime(new Date()));
-      setIsLocalLoading(false);
+      if (isMounted) {
+        setLocalTime(formatTime(new Date()));
+        setIsLocalLoading(false);
+      }
     };
 
     updateLocal();
     const interval = setInterval(updateLocal, 1000);
-    return () => clearInterval(interval);
-  }, []);
+
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, [formatTime]);
 
   useEffect(() => {
+    let isMounted = true;
+    let trackInterval: NodeJS.Timeout | null = null;
+
     const fetchTrackTime = async () => {
-      if (lat && long) {
+      if (lat && long && isMounted) {
         const time = await getTrackTime(lat, long);
-        if (time) {
+        if (time && isMounted) {
           setTrackTime(formatTime(time));
         }
       }
     };
 
     fetchTrackTime();
-    const interval = setInterval(fetchTrackTime, trackTime ? 60000 : 2000);
-    return () => clearInterval(interval);
-  }, [lat, long, getTrackTime]);
+    
+    // Set up interval for track time updates
+    trackInterval = setInterval(fetchTrackTime, trackTime ? 60000 : 2000);
+
+    return () => {
+      isMounted = false;
+      if (trackInterval) {
+        clearInterval(trackInterval);
+      }
+    };
+  }, [lat, long, getTrackTime, formatTime, trackTime]);
+
+  const containerStyle = useMemo(() => [
+    styles.container, 
+    { backgroundColor: colors.card }
+  ], [colors.card]);
+
+  const timeRowStyle = useMemo(() => styles.timeRow, []);
+  const labelStyle = useMemo(() => styles.label, []);
+  const timeStyle = useMemo(() => styles.time, []);
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.card }]}>
+    <View style={containerStyle}>
       {/* Local Time */}
-      <View style={styles.timeRow}>
-        <Text style={styles.label}>Local:</Text>
+      <View style={timeRowStyle}>
+        <Text style={labelStyle}>Local:</Text>
         {isLocalLoading ? (
           <ActivityIndicator size="small" color={colors.primary} />
         ) : (
-          <Text style={styles.time}>{localTime}</Text>
+          <Text style={timeStyle}>{localTime}</Text>
         )}
       </View>
 
       {/* Track Time */}
-      <View style={styles.timeRow}>
-        <Text style={styles.label}>Track:</Text>
+      <View style={timeRowStyle}>
+        <Text style={labelStyle}>Track:</Text>
         {isTrackLoading ? (
           <ActivityIndicator size="small" color={colors.primary} />
         ) : (
-          <Text style={styles.time}>{trackTime || "-"}</Text>
+          <Text style={timeStyle}>{trackTime || "-"}</Text>
         )}
       </View>
 
@@ -82,21 +114,22 @@ export const Clock: React.FC<ClockProps> = ({ lat, long }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 10,
-    padding: 12,
-    borderRadius: 12,
+    padding: 16,
+    borderRadius: 8,
+    margin: 8,
   },
   timeRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 4,
     alignItems: "center",
+    marginBottom: 8,
   },
   label: {
-    fontSize: 16,
+    fontSize: 14,
+    fontWeight: "500",
   },
   time: {
-    fontSize: 16,
-    fontVariant: ["tabular-nums"],
+    fontSize: 14,
+    fontFamily: "monospace",
   },
 });

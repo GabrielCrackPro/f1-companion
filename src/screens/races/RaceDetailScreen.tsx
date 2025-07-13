@@ -3,15 +3,16 @@ import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { Button, List, SessionCountdown, SessionItem } from "../../components";
 import { useRace } from "../../hooks";
-import { RaceNavigationProp, RaceRouteProp } from "../../models";
+import { RaceNavigationProp, RaceRouteProp, Session } from "../../models";
+import { isSessionFinished } from "../../utils";
 
 export const RaceDetailScreen = () => {
   const { params } = useRoute<RaceRouteProp>();
   const { navigate } = useNavigation<RaceNavigationProp>();
   const { getRaceSessions } = useRace();
 
-  const [raceSessions, setRaceSessions] = useState<any[] | null>(null);
-  const [next, setNext] = useState<any | null>(null);
+  const [raceSessions, setRaceSessions] = useState<Session[] | null>(null);
+  const [next, setNext] = useState<Session | null>(null);
   const [isFetching, setIsFetching] = useState(true);
 
   useEffect(() => {
@@ -20,7 +21,10 @@ export const RaceDetailScreen = () => {
       try {
         const sessions = await getRaceSessions(params.season, params.round);
         setRaceSessions(sessions);
-        setNext(sessions && sessions.find((s: any) => !s.finished));
+        if (sessions) {
+          const nextSession = sessions.find((s: Session) => !isSessionFinished(s.date, s.time));
+          setNext(nextSession || null);
+        }
       } catch (err: any) {
         console.error("Error fetching race sessions", err);
       } finally {
@@ -29,7 +33,7 @@ export const RaceDetailScreen = () => {
     };
 
     fetchSessions();
-  }, []);
+  }, [params.season, params.round, getRaceSessions]);
 
   const goToResults = (name?: string) => {
     navigate("Results", {
@@ -50,15 +54,15 @@ export const RaceDetailScreen = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      {!params.finished && params.session === next?.name && (
+      {!params.finished && params.session === next?.name && next && (
         <SessionCountdown nextSession={next} />
       )}
       <List
         items={raceSessions ?? []}
         sortVisible={false}
         countVisible={false}
-        keyExtractor={(item, index) => item?.name ?? index?.toString()}
-        renderItem={(item) => (
+        keyExtractor={(item: Session) => item?.name ?? "unknown"}
+        renderItem={(item: Session) => (
           <SessionItem
             session={item}
             next={next}

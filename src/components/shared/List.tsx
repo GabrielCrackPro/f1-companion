@@ -12,6 +12,12 @@ import { useCustomTheme } from "../../hooks";
 import { Icon, Text } from "./atoms";
 import { ListHeader } from "./ListHeader";
 
+export interface Filter {
+  type: string;
+  label: string;
+  value: string;
+}
+
 interface ListProps<T> {
   title?: string;
   items: T[];
@@ -55,7 +61,7 @@ export const List = <T,>({
   const [sortOpen, setSortOpen] = useState(sortVisible ?? false);
   const [sortValue, setSortValue] = useState("select an option");
   const [isFiltering, setIsFiltering] = useState(false);
-  const [appliedFilters, setAppliedFilters] = useState<any[]>([]);
+  const [appliedFilters, setAppliedFilters] = useState<Filter[]>([]);
 
   const handleSortChange = (value: string) => {
     setSortValue(value);

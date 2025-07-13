@@ -36,7 +36,7 @@ export const useRaces = ({ limit }: UseRacesProps) => {
   const getRace = useCallback(
     (season: number, round: number): Race | null => {
       const found =
-        races?.data?.find((r) => r.season === season && r.round === round) ||
+        races?.data?.find((r) => Number(r.season) === season && r.round === round) ||
         null;
       setRace(found);
       return found;
@@ -45,11 +45,13 @@ export const useRaces = ({ limit }: UseRacesProps) => {
   );
 
   useEffect(() => {
-    const seasons = races?.data?.map((r) => r.season);
-    const distinctSeasons = [...new Set(seasons)];
-    setSeasons(distinctSeasons);
+    if (races?.data) {
+      const seasonNumbers = races.data.map((r) => Number(r.season));
+      const distinctSeasons = [...new Set(seasonNumbers)];
+      setSeasons(distinctSeasons);
+    }
     getRaces();
-  }, [getRaces]);
+  }, [getRaces, races?.data]);
 
   return { races, seasons, race, loading, error, getRaces, getRace };
 };

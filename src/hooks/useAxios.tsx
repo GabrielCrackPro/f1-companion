@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, useEffect } from "react";
 import { axiosClient } from "../config";
 import { AxiosResponse } from "axios";
 
@@ -13,12 +13,28 @@ const getCacheKey = (url: string, params?: Record<string, any>) => {
   return `${url}?${query}`;
 };
 
+const MAX_CACHE_SIZE = 100; // Limit cache to prevent memory leaks
+
 export const useAxios = <T = any,>(baseEndpoint: string) => {
   const [data, setData] = useState<T | (T | null)[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const cacheRef = useRef<Map<string, T>>(new Map());
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  // Cleanup function to clear cache and abort requests
+  const cleanup = useCallback(() => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    cacheRef.current.clear();
+  }, []);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return cleanup;
+  }, [cleanup]);
 
   const get = useCallback(
     async (params?: Record<string, any>) => {
@@ -39,20 +55,46 @@ export const useAxios = <T = any,>(baseEndpoint: string) => {
         return cached;
       }
 
+      // Abort previous request if it exists
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
+      // Create new abort controller
+      abortControllerRef.current = new AbortController();
+
       setLoading(true);
       setError(null);
 
       try {
-        const response = await axiosClient.get<T>(endpoint, { params });
+        const response = await axiosClient.get<T>(endpoint, { 
+          params,
+          signal: abortControllerRef.current.signal
+        });
+        
+        // Check cache size and remove oldest entries if needed
+        if (cacheRef.current.size >= MAX_CACHE_SIZE) {
+          const firstKey = cacheRef.current.keys().next().value;
+          if (firstKey) {
+            cacheRef.current.delete(firstKey);
+          }
+        }
+        
         cacheRef.current.set(cacheKey, response.data);
         setData(response.data);
         return response.data;
       } catch (err: any) {
+        // Don't set error if request was aborted
+        if (err.name === 'AbortError') {
+          return null;
+        }
+        
         console.error("Error fetching data", err);
         const message =
           err?.response?.data?.message ||
+          err?.message ||
           "An error occurred while fetching data.";
-        setError(message);
+        setError(message || "An error occurred while fetching data.");
         return null;
       } finally {
         setLoading(false);
@@ -104,6 +146,15 @@ export const useAxios = <T = any,>(baseEndpoint: string) => {
 
           if (isFulfilled(result)) {
             const data = result.value.data;
+            
+            // Check cache size and remove oldest entries if needed
+            if (cacheRef.current.size >= MAX_CACHE_SIZE) {
+              const firstKey = cacheRef.current.keys().next().value;
+              if (firstKey) {
+                cacheRef.current.delete(firstKey);
+              }
+            }
+            
             cacheRef.current.set(key, data);
             return data;
           }
@@ -117,8 +168,9 @@ export const useAxios = <T = any,>(baseEndpoint: string) => {
         console.error("Error fetching multiple data", err);
         const message =
           err?.response?.data?.message ||
+          err?.message ||
           "An error occurred while fetching multiple data.";
-        setError(message);
+        setError(String(message));
         return null;
       } finally {
         if (fetchNeeded) setLoading(false);
@@ -127,5 +179,5 @@ export const useAxios = <T = any,>(baseEndpoint: string) => {
     []
   );
 
-  return { get, getMultiple, data, loading, error };
+  return { get, getMultiple, data, loading, error, cleanup };
 };
