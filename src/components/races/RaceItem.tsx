@@ -58,6 +58,7 @@ export const RaceItem: React.FC<RaceItemProps> = ({
         season,
         round: race.round,
         name: race.raceName,
+        circuit: race.Circuit,
         finished,
         today,
       });

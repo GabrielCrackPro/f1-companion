@@ -11,7 +11,7 @@ export interface Race {
   round: number;
   url: string;
   raceName: string;
-  circuit: Circuit;
+  Circuit: Circuit;
   date: string;
   time?: string;
   FirstPractice?: Session;

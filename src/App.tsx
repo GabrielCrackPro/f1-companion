@@ -11,14 +11,14 @@ configureReanimatedLogger({
 
 export default function App() {
   return (
-    <ErrorBoundary>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <BottomSheetModalProvider>
-          <AnimatedThemeProvider>
+    <AnimatedThemeProvider>
+      <ErrorBoundary>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <BottomSheetModalProvider>
             <AppContent />
-          </AnimatedThemeProvider>
-        </BottomSheetModalProvider>
-      </GestureHandlerRootView>
-    </ErrorBoundary>
+          </BottomSheetModalProvider>
+        </GestureHandlerRootView>
+      </ErrorBoundary>
+    </AnimatedThemeProvider>
   );
 }

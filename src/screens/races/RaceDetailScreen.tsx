@@ -1,10 +1,17 @@
-import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
-import { Button, List, SessionCountdown, SessionItem } from "../../components";
+import {
+  Button,
+  CircuitInfo,
+  List,
+  SessionCountdown,
+  SessionItem,
+} from "../../components";
 import { useRace } from "../../hooks";
 import { RaceNavigationProp, RaceRouteProp, Session } from "../../models";
 import { isSessionFinished } from "../../utils";
+import * as Browser from "expo-web-browser";
 
 export const RaceDetailScreen = () => {
   const { params } = useRoute<RaceRouteProp>();
@@ -22,7 +29,9 @@ export const RaceDetailScreen = () => {
         const sessions = await getRaceSessions(params.season, params.round);
         setRaceSessions(sessions);
         if (sessions) {
-          const nextSession = sessions.find((s: Session) => !isSessionFinished(s.date, s.time));
+          const nextSession = sessions.find(
+            (s: Session) => !isSessionFinished(s.date, s.time)
+          );
           setNext(nextSession || null);
         }
       } catch (err: any) {
@@ -42,6 +51,16 @@ export const RaceDetailScreen = () => {
       round: params.round,
       session: name ? name : "Race",
     });
+  };
+
+  const goToLocation = async (location: any) => {
+    await Browser.openBrowserAsync(
+      `https://www.google.com/maps?q=${location.lat},${location.long}`
+    );
+  };
+
+  const goToWeb = async (url: string) => {
+    await Browser.openBrowserAsync(url);
   };
 
   if (isFetching) {
@@ -69,6 +88,11 @@ export const RaceDetailScreen = () => {
             onPress={(session) => goToResults(session.name)}
           />
         )}
+      />
+      <CircuitInfo
+        circuit={params.circuit}
+        onLocationPress={(location) => goToLocation(location)}
+        onWebPress={(url) => goToWeb(url)}
       />
       {params.finished && (
         <Button

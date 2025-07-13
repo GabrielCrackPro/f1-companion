@@ -12,7 +12,6 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.gabrielvr01.f1app",
@@ -21,7 +20,6 @@
         "NSCalendarsUsageDescription": "This app needs access to your calendar to manage and display events."
       }
     },
-
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
@@ -29,18 +27,22 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.gabrielvr01.f1app",
-      "permissions": ["READ_CALENDAR", "WRITE_CALENDAR"]
+      "permissions": [
+        "READ_CALENDAR",
+        "WRITE_CALENDAR"
+      ]
     },
-
     "web": {
       "favicon": "./assets/favicon.png"
     },
-
     "extra": {
       "eas": {
         "projectId": "a4db8e6f-1d22-48df-8ae8-ea8a15807e6d"
       }
     },
-    "plugins": ["expo-calendar"]
+    "plugins": [
+      "expo-calendar",
+      "expo-web-browser"
+    ]
   }
 }

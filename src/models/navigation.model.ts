@@ -1,5 +1,6 @@
 import { RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { Circuit } from "./circuit.model";
 
 type RaceScreen = {
   season: number;
@@ -8,6 +9,7 @@ type RaceScreen = {
   finished?: boolean;
   today?: boolean;
   session?: string;
+  circuit?: Circuit;
 };
 
 export type TabNavigationParamList = {
