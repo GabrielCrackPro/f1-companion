@@ -1,9 +1,5 @@
-import { RaceList, ScreenWrapper } from "../../components";
+import { RaceList } from "../../components";
 
 export const RacesScreen: React.FC = () => {
-  return (
-    <ScreenWrapper>
-      <RaceList />
-    </ScreenWrapper>
-  );
+  return <RaceList />;
 };

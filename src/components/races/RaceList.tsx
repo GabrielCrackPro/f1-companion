@@ -4,7 +4,7 @@ import { useRaces, useSeasonContext } from "../../hooks";
 import { racesSortFields } from "../../mappers";
 import { Race } from "../../models";
 import { isSeasonFinished } from "../../utils";
-import { List } from "../shared";
+import { List, ScreenWrapper } from "../shared";
 import { RaceItem } from "./RaceItem";
 import { RaceListEmpty } from "./RaceListEmpty";
 
@@ -96,33 +96,35 @@ export const RaceList: React.FC = () => {
 
   const renderTab = (racesToShow: Race[]) => () =>
     (
-      <List
-        items={racesToShow}
-        loading={loading}
-        error={error ?? undefined}
-        keyExtractor={(item) =>
-          `${item.season}-${item.round}-${item.Circuit.circuitId}`
-        }
-        enableSort
-        sortByItems={Object.keys(racesSortFields)}
-        onSort={handleSort}
-        onResetFilters={handleResetFilters}
-        renderEmpty={() => (
-          <RaceListEmpty
-            title={seasomFinished ? "Season finished" : "No races to show"}
-            message={
-              seasomFinished
-                ? "This season has finished"
-                : "Please check back later"
-            }
-          />
-        )}
-        renderItem={(item) => {
-          const itemId = `${item.season}-${item.round}-${item.Circuit.circuitId}`;
-          const isNext = itemId === nextRaceId;
-          return <RaceItem key={itemId} race={item} isNextRace={isNext} />;
-        }}
-      />
+      <ScreenWrapper>
+        <List
+          items={racesToShow}
+          loading={loading}
+          error={error ?? undefined}
+          keyExtractor={(item) =>
+            `${item.season}-${item.round}-${item.Circuit.circuitId}`
+          }
+          enableSort
+          sortByItems={Object.keys(racesSortFields)}
+          onSort={handleSort}
+          onResetFilters={handleResetFilters}
+          renderEmpty={() => (
+            <RaceListEmpty
+              title={seasomFinished ? "Season finished" : "No races to show"}
+              message={
+                seasomFinished
+                  ? "This season has finished"
+                  : "Please check back later"
+              }
+            />
+          )}
+          renderItem={(item) => {
+            const itemId = `${item.season}-${item.round}-${item.Circuit.circuitId}`;
+            const isNext = itemId === nextRaceId;
+            return <RaceItem key={itemId} race={item} isNextRace={isNext} />;
+          }}
+        />
+      </ScreenWrapper>
     );
 
   return (
