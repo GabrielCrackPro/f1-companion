@@ -73,6 +73,10 @@ export const RaceHeader: React.FC<RaceHeaderProps> = ({
     padding: 16,
     flexDirection: "row",
     alignItems: "center",
+    borderBottomWidth: 0,
+    borderBottomColor: "transparent",
+    elevation: 0,
+    shadowOpacity: 0,
   };
 
   const label = `${name} ${isResults ? " Results" : ""}`;

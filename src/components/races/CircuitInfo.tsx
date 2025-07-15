@@ -30,7 +30,7 @@ export const CircuitInfo: React.FC<CircuitInfoProps> = ({
   return (
     <Animated.ScrollView
       contentContainerStyle={[styles.container, { alignItems: "center" }]}
-      style={{ marginHorizontal: 16, marginVertical: 12 }}
+      style={{ marginHorizontal: 16, marginVertical: 12, height: "100%" }}
     >
       <View style={styles.header}>
         <Text style={styles.name}>{circuit.circuitName}</Text>

@@ -4,6 +4,7 @@ import { ActivityIndicator, View } from "react-native";
 import {
   Button,
   CircuitInfo,
+  CollapsibleView,
   List,
   SessionCountdown,
   SessionItem,
@@ -73,27 +74,29 @@ export const RaceDetailScreen = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      {!params.finished && params.session === next?.name && next && (
-        <SessionCountdown nextSession={next} />
-      )}
-      <List
-        items={raceSessions ?? []}
-        sortVisible={false}
-        countVisible={false}
-        keyExtractor={(item: Session) => item?.name ?? "unknown"}
-        renderItem={(item: Session) => (
-          <SessionItem
-            session={item}
-            next={next}
-            onPress={(session) => goToResults(session.name)}
-          />
-        )}
-      />
-      <CircuitInfo
-        circuit={params.circuit}
-        onLocationPress={(location) => goToLocation(location)}
-        onWebPress={(url) => goToWeb(url)}
-      />
+      {!params.finished && next && <SessionCountdown nextSession={next} />}
+      <CollapsibleView title="Sessions" expanded>
+        <List
+          items={raceSessions ?? []}
+          sortVisible={false}
+          countVisible={false}
+          keyExtractor={(item: Session) => item?.name ?? "unknown"}
+          renderItem={(item: Session) => (
+            <SessionItem
+              session={item}
+              next={next}
+              onPress={(session) => goToResults(session.name)}
+            />
+          )}
+        />
+      </CollapsibleView>
+      <CollapsibleView title="Circuit">
+        <CircuitInfo
+          circuit={params.circuit}
+          onLocationPress={(location) => goToLocation(location)}
+          onWebPress={(url) => goToWeb(url)}
+        />
+      </CollapsibleView>
       {params.finished && (
         <Button
           label="Results"

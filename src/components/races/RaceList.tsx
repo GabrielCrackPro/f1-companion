@@ -40,7 +40,9 @@ export const RaceList: React.FC = () => {
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
     const next = upcomingSorted[0];
-    setNextRaceId(next ? `${next.season}-${next.round}` : null);
+    setNextRaceId(
+      next ? `${next.season}-${next.round}-${next.Circuit.circuitId}` : null
+    );
     setSortedRaces(normalizedRaces);
   }, [races]);
 
@@ -99,7 +101,9 @@ export const RaceList: React.FC = () => {
         items={racesToShow}
         loading={loading}
         error={error ?? undefined}
-        keyExtractor={(item) => `${item.season}-${item.round}`}
+        keyExtractor={(item) =>
+          `${item.season}-${item.round}-${item.Circuit.circuitId}`
+        }
         enableSort
         sortByItems={Object.keys(racesSortFields)}
         onSort={handleSort}
@@ -115,7 +119,7 @@ export const RaceList: React.FC = () => {
           />
         )}
         renderItem={(item) => {
-          const itemId = `${item.season}-${item.round}`;
+          const itemId = `${item.season}-${item.round}-${item.Circuit.circuitId}`;
           const isNext = itemId === nextRaceId;
           return <RaceItem key={itemId} race={item} isNextRace={isNext} />;
         }}

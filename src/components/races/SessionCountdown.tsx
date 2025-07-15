@@ -64,7 +64,7 @@ export const SessionCountdown: React.FC<SessionCountdownProps> = ({
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.card }]}>
       {showLabel && (
         <Text style={styles.label}>
           Next:{" "}
@@ -82,6 +82,8 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 1,
+    padding: 16,
   },
   label: {
     fontSize: 14,

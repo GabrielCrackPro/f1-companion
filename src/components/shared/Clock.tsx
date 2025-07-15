@@ -17,14 +17,14 @@ export const Clock: React.FC<ClockProps> = ({ lat, long }) => {
   const [trackTime, setTrackTime] = useState<string>("");
   const [isLocalLoading, setIsLocalLoading] = useState(true);
 
-  const formatTime = useCallback((date: Date | string) =>
-    new Date(date).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    }), []);
-
-  // Memoize the coordinates to prevent unnecessary API calls
-  const coordinates = useMemo(() => ({ lat, long }), [lat, long]);
+  const formatTime = useCallback(
+    (date: Date | string) =>
+      new Date(date).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    []
+  );
 
   useEffect(() => {
     let isMounted = true;
@@ -59,8 +59,7 @@ export const Clock: React.FC<ClockProps> = ({ lat, long }) => {
     };
 
     fetchTrackTime();
-    
-    // Set up interval for track time updates
+
     trackInterval = setInterval(fetchTrackTime, trackTime ? 60000 : 2000);
 
     return () => {
@@ -71,10 +70,10 @@ export const Clock: React.FC<ClockProps> = ({ lat, long }) => {
     };
   }, [lat, long, getTrackTime, formatTime, trackTime]);
 
-  const containerStyle = useMemo(() => [
-    styles.container, 
-    { backgroundColor: colors.card }
-  ], [colors.card]);
+  const containerStyle = useMemo(
+    () => [styles.container, { backgroundColor: colors.card }],
+    [colors.card]
+  );
 
   const timeRowStyle = useMemo(() => styles.timeRow, []);
   const labelStyle = useMemo(() => styles.label, []);
@@ -117,6 +116,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 8,
     margin: 8,
+    borderWidth: 2,
   },
   timeRow: {
     flexDirection: "row",
