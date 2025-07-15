@@ -1,22 +1,28 @@
 import {
   Entypo,
   EvilIcons,
-  Ionicons,
-  MaterialIcons,
-  MaterialCommunityIcons,
   FontAwesome,
   FontAwesome5,
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
 } from "@expo/vector-icons";
 import React from "react";
 import { StyleProp, ViewStyle } from "react-native";
+import Animated, {
+  interpolateColor,
+  useAnimatedProps,
+} from "react-native-reanimated";
+import { darkTheme, lightTheme } from "../../../constants";
+import { useAnimatedTheme } from "../../../contexts";
 import { IconFamily } from "../../../types/icon.types";
 
 interface IconProps {
   name: string;
   family: IconFamily;
   size?: number;
-  color?: string;
   style?: StyleProp<ViewStyle>;
+  color?: string;
 }
 
 const iconMap: Record<IconFamily, any> = {
@@ -31,17 +37,41 @@ const iconMap: Record<IconFamily, any> = {
 
 export const Icon: React.FC<IconProps> = ({
   name,
-  size = 24,
-  color = "black",
   family,
+  size = 24,
+  color,
   style,
 }) => {
   const IconComponent = iconMap[family];
-
   if (!IconComponent) {
     console.warn(`Icon family "${family}" is not supported.`);
     return null;
   }
 
-  return <IconComponent name={name} size={size} color={color} style={style} />;
+  const { animatedColors } = useAnimatedTheme();
+
+  const lightColor = color ?? lightTheme.colors.text;
+  const darkColor = color ?? darkTheme.colors.text;
+
+  const animatedProps = useAnimatedProps<any>(() => {
+    const color = interpolateColor(
+      animatedColors.text.value,
+      [0, 1],
+      [lightColor, darkColor]
+    );
+    return { color };
+  });
+
+  const AnimatedIcon = Animated.createAnimatedComponent(IconComponent as any);
+
+  return (
+    <AnimatedIcon
+      // @ts-ignore
+      name={name}
+      size={size}
+      style={style}
+      color={color}
+      animatedProps={animatedProps}
+    />
+  );
 };

@@ -8,6 +8,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useStorage } from "../hooks/useStorage";
+import { darkTheme, lightTheme } from "../constants";
 
 type Theme = "light" | "dark";
 
@@ -96,11 +97,25 @@ export const useAnimatedTheme = () => {
   return context;
 };
 
-export const createAnimatedColorStyle = (
-  animatedValue: Animated.SharedValue<number>,
-  lightColor: string,
-  darkColor: string
+export const createAnimatedColorStyleConfig = (
+  animatedValue: Animated.SharedValue<number>
 ) => {
+  const lightColor = lightTheme.colors.text;
+  const darkColor = darkTheme.colors.text;
+
+  return {
+    animatedValue,
+    inputRange: [0, 1],
+    outputRange: [lightColor, darkColor],
+  };
+};
+
+export const createAnimatedColorStyle = (
+  animatedValue: Animated.SharedValue<number>
+) => {
+  const lightColor = lightTheme.colors.text;
+  const darkColor = darkTheme.colors.text;
+
   return useAnimatedStyle(() => {
     const color = interpolateColor(
       animatedValue.value,

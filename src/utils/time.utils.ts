@@ -106,12 +106,16 @@ export const getRemainingTime = (target: Date | null) => {
   return { total, days, hours, minutes, seconds };
 };
 
-export const formatRemainingTime = (t: {
-  days: number;
-  hours: number;
-  minutes: number;
-  seconds: number;
-}) => {
+export const formatRemainingTime = (
+  t: {
+    days: number;
+    hours: number;
+    minutes: number;
+    seconds: number;
+  } | null
+) => {
+  if (!t) return null;
+
   const pad = (n: number) => String(n).padStart(2, "0");
 
   if (t.days > 0) {

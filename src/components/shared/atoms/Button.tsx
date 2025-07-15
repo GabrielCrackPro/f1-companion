@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
   StyleProp,
   TextStyle,
@@ -5,11 +6,12 @@ import {
   TouchableOpacityProps,
   ViewStyle,
 } from "react-native";
-import { useCustomTheme } from "../../../hooks";
-import { Icon, IconFamily } from "./Icon";
+import { interpolateColor, useAnimatedStyle } from "react-native-reanimated";
+import { useAnimatedTheme } from "../../../contexts";
+import { IconFamily } from "../../../types/icon.types";
+import { ButtonVariant, getButtonColors } from "../../../utils";
+import { Icon } from "./Icon";
 import { Text } from "./Text";
-
-type ButtonVariant = "primary" | "outline" | "icon" | "chip";
 
 interface ButtonProps extends TouchableOpacityProps {
   leftIcon?: string;
@@ -22,7 +24,6 @@ interface ButtonProps extends TouchableOpacityProps {
   variant?: ButtonVariant;
   textStyle?: StyleProp<TextStyle>;
   style?: StyleProp<ViewStyle>;
-  onPress?: () => void;
   onClearPress?: () => void;
 }
 
@@ -35,66 +36,92 @@ export const Button: React.FC<ButtonProps> = ({
   variant = "primary",
   textStyle,
   style,
-  disabled,
+  disabled = false,
   activeOpacity = 0.8,
   onPress,
   onClearPress,
   ...props
 }) => {
-  const { colors } = useCustomTheme();
-
+  const { theme, animatedColors } = useAnimatedTheme();
   const isChip = variant === "chip";
 
-  const buttonBaseStyle: StyleProp<ViewStyle> = {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    opacity: disabled ? 0.5 : 1,
-    justifyContent: leftIcon && rightIcon ? "space-between" : "center",
-  };
+  const { background, border, text } = getButtonColors(variant);
 
-  const variantStyles: Record<ButtonVariant, StyleProp<ViewStyle>> = {
-    primary: {
-      backgroundColor: colors.primary,
-      paddingHorizontal: 20,
-      paddingVertical: 8,
-      borderRadius: 18,
-      borderWidth: 1,
-    },
-    outline: {
-      backgroundColor: colors.background,
-      borderColor: colors.primary,
-      borderWidth: 1,
-      borderRadius: 18,
-      paddingHorizontal: 20,
-      paddingVertical: 8,
-    },
-    icon: {
-      padding: 8,
-    },
-    chip: {
-      backgroundColor: colors.primary,
-      borderColor: colors.primary,
-      borderWidth: 1,
-      borderRadius: 18,
-      paddingVertical: 5,
-      paddingHorizontal: 13,
-    },
-  };
+  const buttonBaseStyle: StyleProp<ViewStyle> = useMemo(
+    () => ({
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 8,
+      opacity: disabled ? 0.5 : 1,
+      justifyContent: leftIcon && rightIcon ? "space-between" : "center",
+    }),
+    [disabled, leftIcon, rightIcon]
+  );
 
-  const iconColorMap: Record<ButtonVariant, string> = {
-    primary: colors.text,
-    outline: colors.primary,
-    icon: colors.primary,
-    chip: colors.text,
-  };
+  const animatedBackgroundStyle = useAnimatedStyle(() => {
+    const backgroundColor = animatedColors.background
+      ? interpolateColor(
+          animatedColors.background.value,
+          [0, 1],
+          [background.light, background.dark]
+        )
+      : theme === "light"
+      ? background.light
+      : background.dark;
+
+    const borderColor = animatedColors.border
+      ? interpolateColor(
+          animatedColors.border.value,
+          [0, 1],
+          [border.light, border.dark]
+        )
+      : theme === "light"
+      ? border.light
+      : border.dark;
+
+    return {
+      backgroundColor,
+      borderColor,
+      borderWidth: variant === "outline" || variant === "chip" ? 1 : 0,
+      borderRadius: 18,
+      paddingHorizontal: variant === "icon" ? 8 : variant === "chip" ? 13 : 20,
+      paddingVertical: variant === "icon" ? 0 : variant === "chip" ? 5 : 8,
+    };
+  }, [
+    animatedColors.background?.value,
+    animatedColors.border?.value,
+    background.light,
+    background.dark,
+    border.light,
+    border.dark,
+    theme,
+    variant,
+  ]);
+
+  const animatedTextStyle = useAnimatedStyle(() => {
+    const color = animatedColors.text
+      ? interpolateColor(
+          animatedColors.text.value,
+          [0, 1],
+          [text.light, text.dark]
+        )
+      : theme === "light"
+      ? text.light
+      : text.dark;
+    return { color };
+  }, [animatedColors.text?.value, text.light, text.dark, theme]);
+
+  const iconColor = useMemo(() => {
+    return theme === "light" ? text.light : text.dark;
+  }, [theme, text]);
 
   return (
     <TouchableOpacity
       activeOpacity={activeOpacity}
       onPress={onPress}
-      style={[buttonBaseStyle, variantStyles[variant], style]}
+      style={[buttonBaseStyle, animatedBackgroundStyle, style]}
       disabled={disabled}
+      accessibilityRole="button"
       {...props}
     >
       {leftIcon && (
@@ -102,28 +129,34 @@ export const Button: React.FC<ButtonProps> = ({
           name={leftIcon}
           family={iconFamily}
           size={iconSize}
-          color={iconColorMap[variant]}
+          color={iconColor}
         />
       )}
 
-      {label && <Text style={textStyle}>{label}</Text>}
+      {label && <Text style={[textStyle, animatedTextStyle]}>{label}</Text>}
 
       {rightIcon && (
         <Icon
           name={rightIcon}
           family={iconFamily}
           size={iconSize}
-          color={iconColorMap[variant]}
+          color={iconColor}
         />
       )}
 
-      {isChip && (
-        <TouchableOpacity activeOpacity={1} onPress={onClearPress}>
+      {isChip && onClearPress && (
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={onClearPress}
+          accessibilityRole="button"
+          accessibilityLabel="Clear"
+          style={{ marginLeft: 8 }}
+        >
           <Icon
             name="close"
             family="material-icons"
             size={iconSize}
-            color={iconColorMap[variant]}
+            color={iconColor}
           />
         </TouchableOpacity>
       )}

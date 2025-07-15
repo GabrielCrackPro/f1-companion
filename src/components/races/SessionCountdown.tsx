@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import Animated, {
+  interpolateColor,
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
 import { useCustomTheme } from "../../hooks";
 import { Session } from "../../models";
 import { formatRemainingTime, getRemainingTime } from "../../utils";
@@ -14,7 +22,7 @@ export const SessionCountdown: React.FC<SessionCountdownProps> = ({
   showLabel = true,
   nextSession,
 }) => {
-  const { colors } = useCustomTheme();
+  const { colors, theme } = useCustomTheme();
 
   const getTargetDateTime = () => {
     if (!nextSession?.date || !nextSession?.time) return null;
@@ -31,7 +39,7 @@ export const SessionCountdown: React.FC<SessionCountdownProps> = ({
     if (splitDate.length === 2) {
       [month, day] = splitDate.map(Number);
     } else if (splitDate.length === 3) {
-      [, month, day] = splitDate.map(Number); // ignoramos el año
+      [, month, day] = splitDate.map(Number);
     } else {
       return null;
     }
@@ -47,13 +55,48 @@ export const SessionCountdown: React.FC<SessionCountdownProps> = ({
     getRemainingTime(getTargetDateTime())
   );
 
+  const scale = useSharedValue(1);
+  const progress = useSharedValue(theme === "light" ? 0 : 1);
+
+  useEffect(() => {
+    progress.value = withTiming(theme === "light" ? 0 : 1, { duration: 500 });
+  }, [theme, progress]);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setRemaining(getRemainingTime(getTargetDateTime()));
+      scale.value = withSequence(withSpring(1.2), withSpring(1));
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [nextSession?.date, nextSession?.time]);
+  }, [nextSession?.date, nextSession?.time, scale]);
+
+  const animatedContainerStyle = useAnimatedStyle(() => {
+    const backgroundColor = interpolateColor(
+      progress.value,
+      [0, 1],
+      [colors.card, colors.card]
+    );
+    return {
+      backgroundColor,
+      borderColor: "transparent",
+    };
+  }, [colors.card]);
+
+  const animatedTimeStyle = useAnimatedStyle(() => {
+    const color = interpolateColor(
+      progress.value,
+      [0, 1],
+      [colors.text, colors.text]
+    );
+
+    return {
+      color,
+      transform: [{ scale: scale.value }],
+      fontWeight: "bold",
+      fontSize: 18,
+    };
+  });
 
   if (!remaining || remaining.total <= 0) {
     return (
@@ -64,17 +107,19 @@ export const SessionCountdown: React.FC<SessionCountdownProps> = ({
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.card }]}>
+    <Animated.View style={[styles.container, animatedContainerStyle]}>
       {showLabel && (
-        <Text style={styles.label}>
+        <Text style={[styles.label, { color: colors.text }]}>
           Next:{" "}
           <Text bold style={{ color: colors.primary }}>
             {nextSession?.name}
           </Text>
         </Text>
       )}
-      <Text style={styles.time}>{formatRemainingTime(remaining)}</Text>
-    </View>
+      <Animated.Text style={animatedTimeStyle}>
+        {formatRemainingTime(remaining)}
+      </Animated.Text>
+    </Animated.View>
   );
 };
 
@@ -82,17 +127,11 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
     padding: 16,
   },
   label: {
     fontSize: 14,
-    color: "#888",
     marginBottom: 4,
-  },
-  time: {
-    fontSize: 18,
-    fontWeight: "bold",
   },
   expired: {
     fontSize: 16,

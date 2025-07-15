@@ -1,10 +1,10 @@
 import {
-  Text as NativeText,
   TextProps as NativeTextProps,
   StyleProp,
   TextStyle,
 } from "react-native";
-import { useCustomTheme } from "../../../hooks";
+import Animated from "react-native-reanimated";
+import { createAnimatedColorStyle, useAnimatedTheme } from "../../../contexts";
 
 interface TextProps extends NativeTextProps {
   size?: number;
@@ -24,21 +24,21 @@ export const Text: React.FC<TextProps> = ({
   style,
   ...props
 }) => {
-  const { colors } = useCustomTheme();
+  const { animatedColors } = useAnimatedTheme();
+  const animatedTextStyle = createAnimatedColorStyle(animatedColors.text);
 
-  const defaultStyle: StyleProp<TextStyle> = {
-    fontSize: 16,
-    color: colors.text,
-  };
-
-  const textStyle: StyleProp<TextStyle> = {
-    ...defaultStyle,
-    fontSize: size ? size : defaultStyle.fontSize,
+  const staticTextStyle: StyleProp<TextStyle> = {
+    fontSize: size ?? 16,
     fontWeight: bold ? "bold" : "normal",
     fontStyle: italic ? "italic" : "normal",
     textDecorationLine: underline ? "underline" : "none",
     textAlign: center ? "center" : "left",
   };
 
-  return <NativeText style={[textStyle, style]} {...props} />;
+  return (
+    <Animated.Text
+      style={[staticTextStyle, animatedTextStyle, style]}
+      {...props}
+    />
+  );
 };
