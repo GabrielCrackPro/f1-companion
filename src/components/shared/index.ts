@@ -4,6 +4,7 @@ import { CollapsibleView } from "./CollapsibleView";
 import { Header } from "./Header";
 import { List } from "./List";
 import { ListHeader } from "./ListHeader";
+import { ScreenWrapper } from "./ScreenWrapper";
 import { SettingToggle } from "./SettingToggle";
 
 export * from "./AnimatedCard";
@@ -21,5 +22,6 @@ export {
   Header,
   List,
   ListHeader,
+  ScreenWrapper,
   SettingToggle,
 };

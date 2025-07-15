@@ -14,6 +14,11 @@ export const ROUTE_ICON_MAP: Record<
     unfocused: "flag-checkered",
     family: "material-community",
   },
+  Drivers: {
+    focused: "racing-helmet",
+    unfocused: "racing-helmet",
+    family: "material-community",
+  },
   Settings: {
     focused: "settings-sharp",
     unfocused: "settings-outline",

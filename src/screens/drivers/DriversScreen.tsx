@@ -1,11 +1,11 @@
 import { View } from "react-native";
-import { ScreenWrapper, Text } from "../components";
+import { ScreenWrapper, Text } from "../../components";
 
-export const HomeScreen: React.FC = () => {
+export const DriversScreen: React.FC = () => {
   return (
     <ScreenWrapper>
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Home Screen</Text>
+        <Text>DriversScreen</Text>
       </View>
     </ScreenWrapper>
   );

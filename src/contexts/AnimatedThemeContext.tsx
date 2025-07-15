@@ -112,7 +112,7 @@ export const createAnimatedColorStyle = (
 };
 
 export const createAnimatedBackgroundStyle = (
-  animatedValue: Animated.SharedValue<number>,
+  animatedValue: SharedValue<number>,
   lightColor: string,
   darkColor: string
 ) => {

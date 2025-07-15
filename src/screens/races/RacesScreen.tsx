@@ -1,6 +1,9 @@
-import { RaceList } from "../../components";
-import { useSeasonContext } from "../../hooks";
+import { RaceList, ScreenWrapper } from "../../components";
 
-export const RacesScreen = () => {
-  return <RaceList />;
+export const RacesScreen: React.FC = () => {
+  return (
+    <ScreenWrapper>
+      <RaceList />
+    </ScreenWrapper>
+  );
 };

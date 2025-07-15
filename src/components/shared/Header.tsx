@@ -1,6 +1,4 @@
-import BottomSheet from "@gorhom/bottom-sheet";
 import { ParamListBase, RouteProp } from "@react-navigation/native";
-import { useRef } from "react";
 import { StyleProp, ViewStyle } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useCustomTheme, useSeasonContext } from "../../hooks";
@@ -13,8 +11,6 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ route }) => {
   const { colors } = useCustomTheme();
   const { season, openSeasonSelector } = useSeasonContext();
-
-  const bottomSheetRef = useRef<BottomSheet>(null);
 
   const title =
     route.name === "Races" ? `${route.name} - ${season}` : route.name;

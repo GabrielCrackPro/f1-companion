@@ -1,13 +1,12 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { useEffect, useMemo, useState } from "react";
-import { View } from "react-native";
 import { useRaces, useSeasonContext } from "../../hooks";
 import { racesSortFields } from "../../mappers";
 import { Race } from "../../models";
-import { List, Text } from "../shared";
+import { isSeasonFinished } from "../../utils";
+import { List } from "../shared";
 import { RaceItem } from "./RaceItem";
 import { RaceListEmpty } from "./RaceListEmpty";
-import { isSeasonFinished } from "../../utils";
 
 const Tabs = createMaterialTopTabNavigator();
 
