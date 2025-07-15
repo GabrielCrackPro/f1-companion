@@ -1,12 +1,10 @@
 import { Image } from "expo-image";
 import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import Animated from "react-native-reanimated";
 import { circuitData } from "../../../assets/circuits/data";
-import { circuitImagesMap } from "../../constants";
-import { useCustomTheme } from "../../hooks";
 import { Circuit } from "../../models";
 import { Button, Text } from "../shared";
-import Animated from "react-native-reanimated";
 
 interface CircuitInfoProps {
   circuit?: Circuit;
@@ -19,7 +17,6 @@ export const CircuitInfo: React.FC<CircuitInfoProps> = ({
   onLocationPress,
   onWebPress,
 }) => {
-  const { colors } = useCustomTheme();
   const [info, setInfo] = useState<any>(null);
 
   useEffect(() => {
@@ -52,13 +49,14 @@ export const CircuitInfo: React.FC<CircuitInfoProps> = ({
           />
         </View>
       </View>
-
-      <Image
-        source={circuitImagesMap[circuit.Location.country.toLowerCase()]}
-        style={styles.image}
-        contentFit="contain"
-        cachePolicy="memory-disk"
-      />
+      {info && info.image && (
+        <Image
+          source={info.image}
+          style={styles.image}
+          contentFit="contain"
+          cachePolicy="memory-disk"
+        />
+      )}
 
       <Text style={styles.location}>
         {circuit.Location.locality}, {circuit.Location.country}

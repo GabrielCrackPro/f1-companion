@@ -5,6 +5,7 @@ export const circuitData = [
     first_gp: 2004,
     laps: 57,
     race_distance: 308.238,
+    image: require("./bahrain.webp"),
     fast_lap: {
       time: "1:31.447",
       driver: "de la Rosa",
@@ -17,6 +18,7 @@ export const circuitData = [
     first_gp: 2021,
     laps: 50,
     race_distance: 308.75,
+    iamge: require("./saudi.webp"),
     fast_lap: {
       time: "1:30.734",
       driver: "hamilton",
@@ -29,6 +31,7 @@ export const circuitData = [
     first_gp: 1996,
     laps: 58,
     race_distance: 307.574,
+    image: require("./australia.webp"),
     fast_lap: {
       time: "1:19.813",
       driver: "leclerc",
@@ -36,11 +39,12 @@ export const circuitData = [
     },
   },
   {
-    id: "china",
+    id: "shanghai",
     length: 5.451,
     first_gp: 2004,
     laps: 56,
     race_distance: 305.066,
+    image: require("./china.webp"),
     fast_lap: {
       time: "1:35.454",
       driver: "norris",
@@ -48,11 +52,12 @@ export const circuitData = [
     },
   },
   {
-    id: "japan",
+    id: "suzuka",
     length: 5.807,
     first_gp: 1987,
     laps: 53,
     race_distance: 307.471,
+    image: require("./japan.webp"),
     fast_lap: {
       time: "1:30.965",
       driver: "antonelli",
@@ -65,6 +70,7 @@ export const circuitData = [
     first_gp: 2022,
     laps: 57,
     race_distance: 308.37,
+    image: require("./miami.webp"),
     fast_lap: {
       time: "1:29.708",
       driver: "verstappen",
@@ -77,6 +83,7 @@ export const circuitData = [
     first_gp: 1980,
     laps: 63,
     race_distance: 309.949,
+    image: require("./imola.webp"),
     fast_lap: {
       time: "1:13.609",
       driver: "bottas",
@@ -89,6 +96,7 @@ export const circuitData = [
     first_gp: 1950,
     laps: 78,
     race_distance: 260.286,
+    image: require("./monaco.webp"),
     fast_lap: {
       time: "1:13.221",
       driver: "norris",
@@ -96,11 +104,12 @@ export const circuitData = [
     },
   },
   {
-    id: "spain",
+    id: "catalunya",
     length: 4.655,
     first_gp: 1991,
     laps: 66,
     race_distance: 307.104,
+    image: require("./spain.webp"),
     fast_lap: {
       time: "1:15.743",
       driver: "piastri",
@@ -108,11 +117,12 @@ export const circuitData = [
     },
   },
   {
-    id: "austria",
+    id: "red_bull_ring",
     length: 4.318,
     first_gp: 1970,
     laps: 71,
     race_distance: 306.452,
+    image: require("./austria.webp"),
     fast_lap: {
       time: "1:02.939",
       driver: "bottas",
@@ -125,6 +135,7 @@ export const circuitData = [
     first_gp: 1950,
     laps: 52,
     race_distance: 306.198,
+    image: require("./uk.webp"),
     fast_lap: {
       time: "1:29.337",
       driver: "piastri",
@@ -137,6 +148,7 @@ export const circuitData = [
     first_gp: 1986,
     laps: 70,
     race_distance: 306.63,
+    image: require("./hungary.webp"),
     fast_lap: {
       time: "1:13.447",
       driver: "hamilton",
@@ -149,6 +161,7 @@ export const circuitData = [
     first_gp: 1950,
     laps: 44,
     race_distance: 308.052,
+    image: require("./belgium.webp"),
     fast_lap: {
       time: "1:41.252",
       driver: "hamilton",
@@ -161,6 +174,7 @@ export const circuitData = [
     first_gp: 1952,
     laps: 72,
     race_distance: 306.648,
+    image: require("./netherlands.webp"),
     fast_lap: {
       time: "1:08.885",
       driver: "verstappen",
@@ -173,6 +187,7 @@ export const circuitData = [
     first_gp: 1950,
     laps: 53,
     race_distance: 306.72,
+    image: require("./italy.webp"),
     fast_lap: {
       time: "1:18.887",
       driver: "hamilton",
@@ -180,11 +195,12 @@ export const circuitData = [
     },
   },
   {
-    id: "azerbaijan",
+    id: "baku",
     length: 6.003,
     first_gp: 2017,
     laps: 51,
     race_distance: 306.049,
+    image: require("./baku.webp"),
     fast_lap: {
       time: "1:40.203",
       driver: "leclerc",
@@ -192,11 +208,12 @@ export const circuitData = [
     },
   },
   {
-    id: "singapore",
+    id: "marina_bay",
     length: 5.063,
     first_gp: 2008,
     laps: 61,
     race_distance: 308.706,
+    image: require("./singapore.webp"),
     fast_lap: {
       time: "1:30.984",
       driver: "sainz",
@@ -204,11 +221,12 @@ export const circuitData = [
     },
   },
   {
-    id: "usa",
+    id: "americas",
     length: 5.513,
     first_gp: 2012,
     laps: 56,
     race_distance: 308.405,
+    image: require("./usa.webp"),
     fast_lap: {
       time: "1:32.237",
       driver: "hamilton",
@@ -216,11 +234,12 @@ export const circuitData = [
     },
   },
   {
-    id: "mexico",
+    id: "rodriguez",
     length: 4.304,
     first_gp: 1963,
     laps: 71,
     race_distance: 305.354,
+    image: require("./mexico.webp"),
     fast_lap: {
       time: "1:14.758",
       driver: "verstappen",
@@ -228,11 +247,12 @@ export const circuitData = [
     },
   },
   {
-    id: "brazil",
+    id: "interlagos",
     length: 4.309,
     first_gp: 1973,
     laps: 71,
     race_distance: 305.879,
+    image: require("./brazil.webp"),
     fast_lap: {
       time: "1:07.281",
       driver: "hamilton",
@@ -240,11 +260,12 @@ export const circuitData = [
     },
   },
   {
-    id: "las_vegas",
+    id: "vegas",
     length: 6.201,
     first_gp: 2023,
     laps: 50,
     race_distance: 310.05,
+    image: require("./vegas.webp"),
     fast_lap: {
       time: "1:34.876",
       driver: "norris",
@@ -252,11 +273,12 @@ export const circuitData = [
     },
   },
   {
-    id: "qatar",
+    id: "losail",
     length: 5.419,
     first_gp: 2021,
     laps: 57,
     race_distance: 308.826,
+    image: require("./qatar.webp"),
     fast_lap: {
       time: "1:20.827",
       driver: "hamilton",
@@ -264,15 +286,68 @@ export const circuitData = [
     },
   },
   {
-    id: "abu_dhabi",
+    id: "yas_marina",
     length: 5.554,
     first_gp: 2009,
     laps: 55,
     race_distance: 305.355,
+    image: require("./yas_marina.webp"),
     fast_lap: {
       time: "1:22.109",
       driver: "verstappen",
       year: 2021,
+    },
+  },
+  {
+    id: "hungaroring",
+    length: 4.381,
+    first_gp: 1986,
+    laps: 70,
+    race_distance: 306.63,
+    image: require("./hungary.webp"),
+    fast_lap: {
+      time: "1:16.627",
+      driver: "hamilton",
+      year: 2020,
+    },
+  },
+  {
+    id: "zandvoort",
+    length: 4.259,
+    first_gp: 1952,
+    laps: 72,
+    race_distance: 306.587,
+    image: require("./netherlands.webp"),
+    fast_lap: {
+      time: "1:11.097",
+      driver: "hamilton",
+      year: 2021,
+    },
+  },
+  {
+    id: "monza",
+    length: 3.337,
+    first_gp: 1950,
+    laps: 78,
+    race_distance: 260.286,
+    image: require("./monza.avif"),
+    fast_lap: {
+      time: "1:13.221",
+      driver: "norris",
+      year: 2025,
+    },
+  },
+  {
+    id: "villeneuve",
+    length: 5.361,
+    first_gp: 1978,
+    laps: 70,
+    race_distance: 305.27,
+    image: require("./canada.avif"),
+    fast_lap: {
+      time: "1:13:078",
+      driver: "bottas",
+      year: 2019,
     },
   },
 ];
