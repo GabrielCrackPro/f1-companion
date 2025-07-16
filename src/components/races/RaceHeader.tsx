@@ -9,10 +9,12 @@ import { Button, Text } from "../shared";
 
 interface RaceHeaderProps {
   isResults?: boolean;
+  isLaps?: boolean;
 }
 
 export const RaceHeader: React.FC<RaceHeaderProps> = ({
   isResults = false,
+  isLaps = false,
 }) => {
   const { colors } = useCustomTheme();
   const navigation = useNavigation<RaceNavigationProp>();
@@ -79,7 +81,9 @@ export const RaceHeader: React.FC<RaceHeaderProps> = ({
     shadowOpacity: 0,
   };
 
-  const label = `${name} ${isResults ? " Results" : ""}`;
+  const label = `${name} ${isResults ? " Results" : ""} ${
+    isLaps ? "Laps" : ""
+  }`;
 
   const handleAddToCalendar = async () => {
     if (sessions.length === 0) return;
@@ -112,7 +116,7 @@ export const RaceHeader: React.FC<RaceHeaderProps> = ({
           {label}
         </Text>
       </View>
-      {!finished && !isResults && (
+      {!finished && !isResults && !isLaps && (
         <Button
           variant="icon"
           leftIcon={eventAdded ? "calendar-arrow-right" : "calendar-plus-o"}

@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { raceDetailsMapper, sessionsMapper } from "../mappers";
+import { lapsMapper, raceDetailsMapper, sessionsMapper } from "../mappers";
 import { useAxios } from "./useAxios";
 import { useCalendar } from "./useCalendar";
 
@@ -118,9 +118,21 @@ export const useRace = () => {
     [addEventToCalendar]
   );
 
+  const getRaceLaps = useCallback(
+    async (season: number, round: number, lap: number = 1) => {
+      const response = await getMultiple([`${season}/${round}/laps/${lap}`]);
+
+      if (!response) return null;
+
+      return lapsMapper(response[0]);
+    },
+    [getMultiple]
+  );
+
   return {
     getRaceResults,
     getRaceSessions,
+    getRaceLaps,
     addRaceToCalendar,
     loading,
     error,

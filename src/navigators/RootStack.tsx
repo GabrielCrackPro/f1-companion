@@ -3,6 +3,7 @@ import React from "react";
 import { RaceHeader, SeasonSelector } from "../components";
 import { useSeasonContext } from "../hooks";
 import {
+  LapsScreen,
   RaceDetailScreen,
   RaceResultsScreen,
   SeasonReasultsScreen,
@@ -22,20 +23,29 @@ export const RootStack = () => {
           component={HomeTabs}
           options={{ headerShown: false }}
         />
-        <Stack.Screen
-          name="Race"
-          component={RaceDetailScreen}
-          options={{
-            header: () => <RaceHeader />,
-          }}
-        />
-        <Stack.Screen
-          name="Results"
-          component={RaceResultsScreen}
-          options={{
-            header: () => <RaceHeader isResults />,
-          }}
-        />
+        <Stack.Group>
+          <Stack.Screen
+            name="Race"
+            component={RaceDetailScreen}
+            options={{
+              header: () => <RaceHeader />,
+            }}
+          />
+          <Stack.Screen
+            name="Laps"
+            component={LapsScreen}
+            options={{
+              header: () => <RaceHeader isLaps />,
+            }}
+          />
+          <Stack.Screen
+            name="Results"
+            component={RaceResultsScreen}
+            options={{
+              header: () => <RaceHeader isResults />,
+            }}
+          />
+        </Stack.Group>
         <Stack.Screen name="SeasonResults" component={SeasonReasultsScreen} />
       </Stack.Navigator>
       <SeasonSelector

@@ -8,7 +8,7 @@ import { RaceRouteProp } from "../../models";
 
 const Tab = createMaterialTopTabNavigator();
 
-export const RaceResultsScreen = () => {
+export const RaceResultsScreen: React.FC = () => {
   const {
     params: { season, round, session },
   } = useRoute<RaceRouteProp>();

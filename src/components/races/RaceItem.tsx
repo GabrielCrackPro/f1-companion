@@ -19,6 +19,7 @@ import {
 } from "../../utils";
 import { Icon, Text } from "../shared";
 import { SessionCountdown } from "./SessionCountdown";
+import { circuitData } from "../../../assets/circuits/data";
 
 interface RaceItemProps {
   race: Race | null;
@@ -59,6 +60,7 @@ export const RaceItem: React.FC<RaceItemProps> = ({
         round: race.round,
         name: race.raceName,
         circuit: race.Circuit,
+        laps: circuitData.find((c) => c.id === race.Circuit.circuitId)?.laps,
         finished,
         today,
       });

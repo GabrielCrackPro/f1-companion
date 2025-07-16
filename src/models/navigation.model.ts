@@ -10,12 +10,14 @@ type RaceScreen = {
   today?: boolean;
   session?: string;
   circuit?: Circuit;
+  laps?: number;
 };
 
 export type TabNavigationParamList = {
   Home: undefined;
   Race: RaceScreen;
   Results: RaceScreen;
+  Laps: RaceScreen & { laps: number };
   SeasonResults: { season: number };
 };
 

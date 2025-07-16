@@ -88,3 +88,7 @@ export const sessionsMapper = (data: any) => {
       location: getSessionName(index) === "Race" ? getSessionLocation(s) : null,
     }));
 };
+
+export const lapsMapper = (data: any) => {
+  return data.MRData.RaceTable.Races[0].Laps;
+};

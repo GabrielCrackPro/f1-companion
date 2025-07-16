@@ -14,7 +14,7 @@ import { RaceNavigationProp, RaceRouteProp, Session } from "../../models";
 import { isSessionFinished } from "../../utils";
 import * as Browser from "expo-web-browser";
 
-export const RaceDetailScreen = () => {
+export const RaceDetailScreen: React.FC = () => {
   const { params } = useRoute<RaceRouteProp>();
   const { navigate } = useNavigation<RaceNavigationProp>();
   const { getRaceSessions } = useRace();
@@ -51,6 +51,15 @@ export const RaceDetailScreen = () => {
       season: params.season,
       round: params.round,
       session: name ? name : "Race",
+    });
+  };
+
+  const goToLaps = () => {
+    navigate("Laps", {
+      name: params.name,
+      season: params.season,
+      round: params.round,
+      laps: params.laps || 1,
     });
   };
 
@@ -98,15 +107,26 @@ export const RaceDetailScreen = () => {
         />
       </CollapsibleView>
       {params.finished && (
-        <Button
-          label="Results"
-          leftIcon="flag-checkered"
-          rightIcon="chevron-right"
-          iconFamily="material-community"
-          variant="primary"
-          style={{ margin: 8 }}
-          onPress={() => goToResults()}
-        />
+        <>
+          <Button
+            label="Lap by Lap"
+            variant="primary"
+            leftIcon="timer-outline"
+            iconFamily="material-community"
+            rightIcon="chevron-right"
+            style={{ margin: 8 }}
+            onPress={() => goToLaps()}
+          />
+          <Button
+            label="Results"
+            leftIcon="flag-checkered"
+            rightIcon="chevron-right"
+            iconFamily="material-community"
+            variant="primary"
+            style={{ margin: 8 }}
+            onPress={() => goToResults()}
+          />
+        </>
       )}
     </View>
   );

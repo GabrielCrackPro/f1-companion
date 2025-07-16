@@ -33,7 +33,7 @@ interface ListProps<T> {
   onSort?: (key: keyof T, order: "asc" | "desc") => void;
   renderItem: (item: T) => React.ReactElement;
   renderEmpty?: () => React.ReactElement;
-  keyExtractor: (item: T) => string;
+  keyExtractor: (item: T, index: number) => any;
   onResetFilters?: () => void;
 }
 
