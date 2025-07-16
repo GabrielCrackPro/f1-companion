@@ -130,16 +130,16 @@ export const circuitData = [
     },
   },
   {
-    id: "britain",
+    id: "silverstone",
     length: 5.891,
     first_gp: 1950,
     laps: 52,
     race_distance: 306.198,
     image: require("./uk.webp"),
     fast_lap: {
-      time: "1:29.337",
-      driver: "piastri",
-      year: 2025,
+      time: "1:27.097",
+      driver: "verstappen",
+      year: 2020,
     },
   },
   {

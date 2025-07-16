@@ -3,6 +3,7 @@ import React from "react";
 import { RaceHeader, SeasonSelector } from "../components";
 import { useSeasonContext } from "../hooks";
 import {
+  DriverDetailScreen,
   LapsScreen,
   RaceDetailScreen,
   RaceResultsScreen,
@@ -45,6 +46,9 @@ export const RootStack = () => {
               header: () => <RaceHeader isResults />,
             }}
           />
+        </Stack.Group>
+        <Stack.Group>
+          <Stack.Screen name="Driver" component={DriverDetailScreen} />
         </Stack.Group>
         <Stack.Screen name="SeasonResults" component={SeasonReasultsScreen} />
       </Stack.Navigator>

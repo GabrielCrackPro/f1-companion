@@ -6,7 +6,7 @@ import { useCalendar } from "../hooks/useCalendar";
 import { RootStack } from "../navigators/RootStack";
 import { AnimatedContainer } from "./AnimatedContainer";
 
-export const AppContent = () => {
+export const AppContent: React.FC = () => {
   useCalendar();
 
   const { theme } = useAnimatedTheme();

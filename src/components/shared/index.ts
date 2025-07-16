@@ -4,6 +4,7 @@ import { CollapsibleView } from "./CollapsibleView";
 import { Header } from "./Header";
 import { List } from "./List";
 import { ListHeader } from "./ListHeader";
+import { QuantitySelector } from "./QuantitySelector";
 import { ScreenWrapper } from "./ScreenWrapper";
 import { SettingToggle } from "./SettingToggle";
 
@@ -19,6 +20,7 @@ export {
   Header,
   List,
   ListHeader,
+  QuantitySelector,
   ScreenWrapper,
   SettingToggle,
 };

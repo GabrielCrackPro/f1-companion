@@ -1,13 +1,13 @@
 import { useState } from "react";
 import {
   ActivityIndicator,
-  FlatList,
   StyleProp,
   StyleSheet,
   TextStyle,
   View,
   ViewStyle,
 } from "react-native";
+import Animated from "react-native-reanimated";
 import { useCustomTheme } from "../../hooks";
 import { Icon, Text } from "./atoms";
 import { ListHeader } from "./ListHeader";
@@ -116,14 +116,14 @@ export const List = <T,>({
 
       {/* List */}
       {!loading && !error && (
-        <FlatList
+        <Animated.FlatList
           data={items}
           renderItem={({ item }) => renderItem(item)}
           keyExtractor={keyExtractor}
           style={style}
           stickyHeaderIndices={[0]}
           stickyHeaderHiddenOnScroll={false}
-          StickyHeaderComponent={() => (
+          ListHeaderComponent={() => (
             <ListHeader
               title={title}
               titleStyle={titleStyle}
@@ -167,22 +167,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  headerRight: {
-    flexDirection: "row",
-    gap: 8,
-  },
-  filters: {
-    marginVertical: 8,
-    gap: 16,
-  },
-  itemCount: {
-    marginBottom: 8,
   },
   empty: {
     padding: 16,

@@ -21,3 +21,13 @@ export interface Race {
   Sprint?: Session;
   SprintQualifying?: Session;
 }
+export interface LapTiming {
+  driverId: string;
+  position: string;
+  time: string;
+}
+
+export interface LapData {
+  Timings: LapTiming[];
+  number: string;
+}

@@ -1,6 +1,7 @@
 import { useAxios } from "./useAxios";
 import { useCalendar } from "./useCalendar";
 import { useCustomTheme } from "./useCustomTheme";
+import { useDrivers } from "./useDrivers";
 import { useRace } from "./useRace";
 import { useRaces } from "./useRaces";
 import { useSeasonContext } from "./useSeasonContext";
@@ -11,6 +12,7 @@ export {
   useAxios,
   useCalendar,
   useCustomTheme,
+  useDrivers,
   useRace,
   useRaces,
   useSeasonContext,
