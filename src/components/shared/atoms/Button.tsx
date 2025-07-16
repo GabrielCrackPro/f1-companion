@@ -6,12 +6,23 @@ import {
   TouchableOpacityProps,
   ViewStyle,
 } from "react-native";
-import { interpolateColor, useAnimatedStyle } from "react-native-reanimated";
+import Animated, {
+  interpolateColor,
+  useAnimatedStyle,
+} from "react-native-reanimated";
 import { useAnimatedTheme } from "../../../contexts";
 import { IconFamily } from "../../../types/icon.types";
-import { ButtonVariant, getButtonColors } from "../../../utils";
+import {
+  ButtonVariant,
+  getButtonColors,
+  getVariantStyle,
+} from "../../../utils";
 import { Icon } from "./Icon";
 import { Text } from "./Text";
+
+// use Animated version of TouchableOpacity
+const AnimatedTouchableOpacity =
+  Animated.createAnimatedComponent(TouchableOpacity);
 
 interface ButtonProps extends TouchableOpacityProps {
   leftIcon?: string;
@@ -45,7 +56,11 @@ export const Button: React.FC<ButtonProps> = ({
   const { theme, animatedColors } = useAnimatedTheme();
   const isChip = variant === "chip";
 
+  // get dynamic colors
   const { background, border, text } = getButtonColors(variant);
+
+  // base style for each variant (no backgroundColor here)
+  const variantStyle = useMemo(() => getVariantStyle(variant), [variant]);
 
   const buttonBaseStyle: StyleProp<ViewStyle> = useMemo(
     () => ({
@@ -53,11 +68,11 @@ export const Button: React.FC<ButtonProps> = ({
       alignItems: "center",
       gap: 8,
       opacity: disabled ? 0.5 : 1,
-      justifyContent: leftIcon && rightIcon ? "space-between" : "center",
     }),
-    [disabled, leftIcon, rightIcon]
+    [disabled]
   );
 
+  // animated background and border
   const animatedBackgroundStyle = useAnimatedStyle(() => {
     const backgroundColor = animatedColors.background
       ? interpolateColor(
@@ -83,9 +98,6 @@ export const Button: React.FC<ButtonProps> = ({
       backgroundColor,
       borderColor,
       borderWidth: variant === "outline" || variant === "chip" ? 1 : 0,
-      borderRadius: 18,
-      paddingHorizontal: variant === "icon" ? 8 : variant === "chip" ? 13 : 20,
-      paddingVertical: variant === "icon" ? 0 : variant === "chip" ? 5 : 8,
     };
   }, [
     animatedColors.background?.value,
@@ -98,6 +110,7 @@ export const Button: React.FC<ButtonProps> = ({
     variant,
   ]);
 
+  // animated text color
   const animatedTextStyle = useAnimatedStyle(() => {
     const color = animatedColors.text
       ? interpolateColor(
@@ -116,10 +129,11 @@ export const Button: React.FC<ButtonProps> = ({
   }, [theme, text]);
 
   return (
-    <TouchableOpacity
+    <AnimatedTouchableOpacity
       activeOpacity={activeOpacity}
       onPress={onPress}
-      style={[buttonBaseStyle, animatedBackgroundStyle, style]}
+      // ✅ IMPORTANT: put plain styles first, then animated style LAST
+      style={[buttonBaseStyle, variantStyle, animatedBackgroundStyle, style]}
       disabled={disabled}
       accessibilityRole="button"
       {...props}
@@ -160,6 +174,6 @@ export const Button: React.FC<ButtonProps> = ({
           />
         </TouchableOpacity>
       )}
-    </TouchableOpacity>
+    </AnimatedTouchableOpacity>
   );
 };

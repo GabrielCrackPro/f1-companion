@@ -103,8 +103,9 @@ export const RaceDetailScreen = () => {
           leftIcon="flag-checkered"
           rightIcon="chevron-right"
           iconFamily="material-community"
-          style={{ padding: 16, margin: 8, borderRadius: 3 }}
-          onPress={goToResults}
+          variant="primary"
+          style={{ margin: 8 }}
+          onPress={() => goToResults()}
         />
       )}
     </View>

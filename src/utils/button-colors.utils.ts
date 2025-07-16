@@ -1,3 +1,5 @@
+import { ViewStyle } from "react-native";
+
 export type ButtonVariant = "primary" | "outline" | "icon" | "chip";
 
 interface ButtonVariantColors {
@@ -40,3 +42,43 @@ export const getButtonColors = (
       };
   }
 };
+
+export function getVariantStyle(variant: ButtonVariant): ViewStyle {
+  switch (variant) {
+    case "primary":
+      return {
+        borderRadius: 18,
+        paddingHorizontal: 20,
+        paddingVertical: 12,
+        justifyContent: "center",
+      };
+    case "outline":
+      return {
+        borderRadius: 18,
+        paddingHorizontal: 20,
+        paddingVertical: 12,
+        justifyContent: "center",
+      };
+    case "chip":
+      return {
+        borderRadius: 18,
+        paddingHorizontal: 13,
+        paddingVertical: 5,
+        justifyContent: "center",
+      };
+    case "icon":
+      return {
+        borderRadius: 28,
+        paddingHorizontal: 8,
+        paddingVertical: 8,
+        justifyContent: "center",
+      };
+    default:
+      return {
+        borderRadius: 18,
+        paddingHorizontal: 20,
+        paddingVertical: 12,
+        justifyContent: "center",
+      };
+  }
+}
