@@ -1,3 +1,4 @@
+import { racesFlags } from "../constants";
 import { Race } from "../models";
 import { formatDate, formatTime } from "../utils";
 import { commonMapper } from "./common.mapper";
@@ -13,10 +14,17 @@ export const racesMapper = (data: any) => {
   const common = commonMapper(data);
   data = {
     ...common,
-    data: data.MRData.RaceTable.Races,
+    data: data.MRData.RaceTable.Races.map((r: Race) => ({
+      ...r,
+      Flag: getRaceFlag(r.Circuit.Location.country),
+    })),
   };
 
   return data;
+};
+
+const getRaceFlag = (country: string) => {
+  return racesFlags.find((f) => f.name === country)?.flag || "";
 };
 
 const mapSession = (

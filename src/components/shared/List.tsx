@@ -30,6 +30,7 @@ interface ListProps<T> {
   titleStyle?: StyleProp<TextStyle>;
   containerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
+  contentContainerStyle?: StyleProp<ViewStyle>;
   onSort?: (key: keyof T, order: "asc" | "desc") => void;
   renderItem: (item: T) => React.ReactElement;
   renderEmpty?: () => React.ReactElement;
@@ -48,6 +49,7 @@ export const List = <T,>({
   countVisible = true,
   titleStyle,
   containerStyle,
+  contentContainerStyle,
   style,
   onSort,
   renderItem,
@@ -123,6 +125,7 @@ export const List = <T,>({
           style={style}
           stickyHeaderIndices={[0]}
           stickyHeaderHiddenOnScroll={false}
+          contentContainerStyle={contentContainerStyle}
           ListHeaderComponent={() => (
             <ListHeader
               title={title}

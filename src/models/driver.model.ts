@@ -7,10 +7,13 @@ export interface Driver {
   familyName: string;
   dateOfBirth: string;
   nationality: string;
+  image: any;
+  flag: any;
   constructor: {
     id: string;
     name: string;
     drivers: string[];
     color: string;
+    image: any;
   };
 }

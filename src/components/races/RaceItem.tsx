@@ -20,6 +20,7 @@ import {
 import { Icon, Text } from "../shared";
 import { SessionCountdown } from "./SessionCountdown";
 import { circuitData } from "../../../assets/circuits/data";
+import { Image } from "expo-image";
 
 interface RaceItemProps {
   race: Race | null;

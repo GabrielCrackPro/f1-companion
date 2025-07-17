@@ -20,6 +20,7 @@ export interface Race {
   Qualifying?: Session;
   Sprint?: Session;
   SprintQualifying?: Session;
+  Flag?: any;
 }
 export interface LapTiming {
   driverId: string;
