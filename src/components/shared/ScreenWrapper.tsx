@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import Animated, {
   useSharedValue,
@@ -10,9 +10,13 @@ import Animated, {
 
 interface ScreenWrapperProps {
   children: React.ReactNode;
+  disabledAnimation?: boolean;
 }
 
-export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({ children }) => {
+export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({
+  children,
+  disabledAnimation,
+}) => {
   const isFocused = useIsFocused();
 
   const translateY = useSharedValue(20);
@@ -34,10 +38,12 @@ export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({ children }) => {
     };
   });
 
+  const ViewComponwnt = disabledAnimation ? View : Animated.View;
+
   return (
-    <Animated.View style={[styles.container, animatedStyle]}>
+    <ViewComponwnt style={[styles.container, animatedStyle]}>
       {children}
-    </Animated.View>
+    </ViewComponwnt>
   );
 };
 

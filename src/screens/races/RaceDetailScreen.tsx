@@ -63,6 +63,14 @@ export const RaceDetailScreen: React.FC = () => {
     });
   };
 
+  const goToPitstops = () => {
+    navigate("Pitstops", {
+      name: params.name,
+      season: params.season,
+      round: params.round,
+    });
+  };
+
   const goToLocation = async (location: any) => {
     await Browser.openBrowserAsync(
       `https://www.google.com/maps?q=${location.lat},${location.long}`
@@ -116,6 +124,15 @@ export const RaceDetailScreen: React.FC = () => {
             rightIcon="chevron-right"
             style={{ margin: 8 }}
             onPress={() => goToLaps()}
+          />
+          <Button
+            label="Pitstops"
+            variant="primary"
+            leftIcon="clock-outline"
+            iconFamily="material-community"
+            rightIcon="chevron-right"
+            style={{ margin: 8 }}
+            onPress={() => goToPitstops()}
           />
           <Button
             label="Results"

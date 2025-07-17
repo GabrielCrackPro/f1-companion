@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
   ActivityIndicator,
+  FlatList,
   StyleProp,
   StyleSheet,
   TextStyle,
@@ -31,6 +32,7 @@ interface ListProps<T> {
   containerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
   contentContainerStyle?: StyleProp<ViewStyle>;
+  disableAnimation?: boolean;
   onSort?: (key: keyof T, order: "asc" | "desc") => void;
   renderItem: (item: T) => React.ReactElement;
   renderEmpty?: () => React.ReactElement;
@@ -51,6 +53,7 @@ export const List = <T,>({
   containerStyle,
   contentContainerStyle,
   style,
+  disableAnimation = false,
   onSort,
   renderItem,
   renderEmpty,
@@ -98,6 +101,8 @@ export const List = <T,>({
     setAppliedFilters([]);
   };
 
+  const ListComponent: any = disableAnimation ? FlatList : Animated.FlatList;
+
   return (
     <View style={containerStyle}>
       {/* Loading */}
@@ -118,9 +123,9 @@ export const List = <T,>({
 
       {/* List */}
       {!loading && !error && (
-        <Animated.FlatList
+        <ListComponent
           data={items}
-          renderItem={({ item }) => renderItem(item)}
+          renderItem={({ item }: { item: T }) => renderItem(item)}
           keyExtractor={keyExtractor}
           style={style}
           stickyHeaderIndices={[0]}

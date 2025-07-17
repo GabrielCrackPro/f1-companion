@@ -10,7 +10,7 @@ import Animated, {
   interpolateColor,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { List, ScreenWrapper, Text } from "../../components";
+import { Icon, List, ScreenWrapper, Text } from "../../components";
 import { darkTheme, lightTheme } from "../../constants";
 import { useAnimatedTheme } from "../../contexts";
 import { useDrivers } from "../../hooks";
@@ -79,6 +79,7 @@ export const DriversScreen: React.FC = () => {
                 <Text>{item.nationality}</Text>
               </View>
             )}
+
             {item.constructor && (
               <View style={styles.row}>
                 <Image
@@ -90,6 +91,10 @@ export const DriversScreen: React.FC = () => {
                 </Text>
               </View>
             )}
+            <View style={styles.row}>
+              <Icon name="calendar-month-outline" family="material-community" />
+              <Text>{item.dateOfBirth}</Text>
+            </View>
           </View>
           {item.image && (
             <View style={styles.imageWrapper}>
@@ -127,7 +132,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     overflow: "hidden",
     flexDirection: "row",
-    height: 160,
+    height: 190,
     alignSelf: "center",
     shadowColor: "#000",
     shadowOpacity: 0.1,
@@ -138,6 +143,7 @@ const styles = StyleSheet.create({
   cardContent: {
     flex: 1,
     flexDirection: "row",
+    padding: 8,
   },
   info: {
     flex: 1,

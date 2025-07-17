@@ -17,6 +17,7 @@ export type TabNavigationParamList = {
   Home: undefined;
   Race: RaceScreen;
   Results: RaceScreen;
+  Pitstops: RaceScreen;
   Laps: RaceScreen & { laps: number };
   SeasonResults: { season: number };
 };

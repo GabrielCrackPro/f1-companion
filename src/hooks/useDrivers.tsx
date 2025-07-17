@@ -5,7 +5,7 @@ import { useSeasonContext } from "./useSeasonContext";
 
 export const useDrivers = () => {
   const { season } = useSeasonContext();
-  const { getMultiple, get } = useAxios("drivers");
+  const { getMultiple } = useAxios("drivers");
 
   const getDrivers = useCallback(async () => {
     const response = await getMultiple([`${season}/drivers`]);
@@ -17,7 +17,7 @@ export const useDrivers = () => {
 
   const getDriverById = useCallback(
     async (driverId: string) => {
-      const response = await getMultiple([`/drivers/${driverId}`]);
+      const response = await getMultiple([`/${season}/drivers/${driverId}`]);
       if (!response) return null;
       return driverMapper(response[0]);
     },
