@@ -1,10 +1,10 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
+import * as Browser from "expo-web-browser";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import {
   Button,
   CircuitInfo,
-  CollapsibleView,
   List,
   SessionCountdown,
   SessionItem,
@@ -12,7 +12,6 @@ import {
 import { useRace } from "../../hooks";
 import { RaceNavigationProp, RaceRouteProp, Session } from "../../models";
 import { isSessionFinished } from "../../utils";
-import * as Browser from "expo-web-browser";
 
 export const RaceDetailScreen: React.FC = () => {
   const { params } = useRoute<RaceRouteProp>();
@@ -92,28 +91,24 @@ export const RaceDetailScreen: React.FC = () => {
   return (
     <View style={{ flex: 1 }}>
       {!params.finished && next && <SessionCountdown nextSession={next} />}
-      <CollapsibleView title="Sessions" expanded>
-        <List
-          items={raceSessions ?? []}
-          sortVisible={false}
-          countVisible={false}
-          keyExtractor={(item: Session) => item?.name ?? "unknown"}
-          renderItem={(item: Session) => (
-            <SessionItem
-              session={item}
-              next={next}
-              onPress={(session) => goToResults(session.name)}
-            />
-          )}
-        />
-      </CollapsibleView>
-      <CollapsibleView title="Circuit">
-        <CircuitInfo
-          circuit={params.circuit}
-          onLocationPress={(location) => goToLocation(location)}
-          onWebPress={(url) => goToWeb(url)}
-        />
-      </CollapsibleView>
+      <List
+        items={raceSessions ?? []}
+        sortVisible={false}
+        countVisible={false}
+        keyExtractor={(item: Session) => item?.name ?? "unknown"}
+        renderItem={(item: Session) => (
+          <SessionItem
+            session={item}
+            next={next}
+            onPress={(session) => goToResults(session.name)}
+          />
+        )}
+      />
+      <CircuitInfo
+        circuit={params.circuit}
+        onLocationPress={(location) => goToLocation(location)}
+        onWebPress={(url) => goToWeb(url)}
+      />
       {params.finished && (
         <>
           <Button
