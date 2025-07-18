@@ -20,7 +20,6 @@ import {
 import { Icon } from "./Icon";
 import { Text } from "./Text";
 
-// use Animated version of TouchableOpacity
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
 
@@ -56,12 +55,9 @@ export const Button: React.FC<ButtonProps> = ({
   const { theme, animatedColors } = useAnimatedTheme();
   const isChip = variant === "chip";
 
-  // get dynamic colors
   const { background, border, text } = getButtonColors(variant);
 
-  // base style for each variant (no backgroundColor here)
   const variantStyle = useMemo(() => getVariantStyle(variant), [variant]);
-
   const buttonBaseStyle: StyleProp<ViewStyle> = useMemo(
     () => ({
       flexDirection: "row",
@@ -72,7 +68,6 @@ export const Button: React.FC<ButtonProps> = ({
     [disabled]
   );
 
-  // animated background and border
   const animatedBackgroundStyle = useAnimatedStyle(() => {
     const backgroundColor = animatedColors.background
       ? interpolateColor(
@@ -110,7 +105,6 @@ export const Button: React.FC<ButtonProps> = ({
     variant,
   ]);
 
-  // animated text color
   const animatedTextStyle = useAnimatedStyle(() => {
     const color = animatedColors.text
       ? interpolateColor(
@@ -132,7 +126,6 @@ export const Button: React.FC<ButtonProps> = ({
     <AnimatedTouchableOpacity
       activeOpacity={activeOpacity}
       onPress={onPress}
-      // ✅ IMPORTANT: put plain styles first, then animated style LAST
       style={[buttonBaseStyle, variantStyle, animatedBackgroundStyle, style]}
       disabled={disabled}
       accessibilityRole="button"

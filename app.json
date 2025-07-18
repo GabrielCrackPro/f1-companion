@@ -42,7 +42,8 @@
     },
     "plugins": [
       "expo-calendar",
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-notifications"
     ]
   }
 }

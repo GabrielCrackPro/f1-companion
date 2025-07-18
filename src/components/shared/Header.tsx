@@ -1,8 +1,13 @@
-import { ParamListBase, RouteProp } from "@react-navigation/native";
+import {
+  ParamListBase,
+  RouteProp,
+  useNavigation,
+} from "@react-navigation/native";
 import { StyleProp, ViewStyle } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useCustomTheme, useSeasonContext } from "../../hooks";
 import { Button, Logo, Text } from "./atoms";
+import { RaceNavigationProp } from "../../models";
 
 interface HeaderProps {
   route: RouteProp<ParamListBase>;
@@ -11,6 +16,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ route }) => {
   const { colors } = useCustomTheme();
   const { season, openSeasonSelector } = useSeasonContext();
+  const { navigate } = useNavigation<RaceNavigationProp>();
 
   const title =
     route.name === "Races" ? `${route.name} - ${season}` : route.name;
@@ -21,6 +27,10 @@ export const Header: React.FC<HeaderProps> = ({ route }) => {
     alignItems: "center",
     justifyContent: "space-around",
     flexDirection: "row",
+  };
+
+  const goToNotifications = () => {
+    navigate("Notifications");
   };
 
   return (
@@ -34,6 +44,7 @@ export const Header: React.FC<HeaderProps> = ({ route }) => {
         iconFamily="evilicons"
         leftIcon="bell"
         iconSize={24}
+        onPress={() => goToNotifications()}
       />
       {route.name === "Races" && (
         <Button

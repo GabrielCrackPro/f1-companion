@@ -5,9 +5,11 @@ import { SeasonProvider } from "../contexts/SeasonContext";
 import { useCalendar } from "../hooks/useCalendar";
 import { RootStack } from "../navigators/RootStack";
 import { AnimatedContainer } from "./AnimatedContainer";
+import { useNotifications } from "../hooks";
 
 export const AppContent: React.FC = () => {
   useCalendar();
+  useNotifications();
 
   const { theme } = useAnimatedTheme();
 

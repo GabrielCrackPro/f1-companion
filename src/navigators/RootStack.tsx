@@ -5,6 +5,7 @@ import { useSeasonContext } from "../hooks";
 import {
   DriverDetailScreen,
   LapsScreen,
+  NotificationsScreen,
   PitStopsScreen,
   RaceDetailScreen,
   RaceResultsScreen,
@@ -53,6 +54,7 @@ export const RootStack = () => {
         </Stack.Group>
         <Stack.Screen name="SeasonResults" component={SeasonReasultsScreen} />
         <Stack.Screen name="Pitstops" component={PitStopsScreen} />
+        <Stack.Screen name="Notifications" component={NotificationsScreen} />
       </Stack.Navigator>
       <SeasonSelector
         ref={seasonSelectorRef}

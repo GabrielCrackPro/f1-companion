@@ -15,6 +15,7 @@ type RaceScreen = {
 
 export type TabNavigationParamList = {
   Home: undefined;
+  Notifications: undefined;
   Race: RaceScreen;
   Results: RaceScreen;
   Pitstops: RaceScreen;
