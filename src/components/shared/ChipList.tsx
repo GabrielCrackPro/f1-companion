@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleProp, View, ViewStyle } from "react-native";
-import { Button } from "./atoms";
+import { Button } from "./atoms/Button";
 import { Filter } from "./List";
 
 export type ChipListProps = {

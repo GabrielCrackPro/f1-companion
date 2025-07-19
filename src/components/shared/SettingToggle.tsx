@@ -1,5 +1,5 @@
 import { StyleSheet, Switch, View } from "react-native";
-import { Text } from "./atoms";
+import { Text } from "./atoms/Text";
 import { useCustomTheme } from "../../hooks";
 
 interface SettingToggleProps {
@@ -15,7 +15,7 @@ export const SettingToggle: React.FC<SettingToggleProps> = ({
   value,
   onPress,
 }) => {
-  const { colors, mode } = useCustomTheme();
+  const { colors } = useCustomTheme();
 
   return (
     <View style={[styles.container, { backgroundColor: colors.card }]}>

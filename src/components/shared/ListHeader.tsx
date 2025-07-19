@@ -1,8 +1,9 @@
 import { StyleProp, StyleSheet, TextStyle, View } from "react-native";
 import { useCustomTheme } from "../../hooks";
-import { Button, Text } from "./atoms";
+import { Text } from "./atoms/Text";
 import { ChipList } from "./ChipList";
 import { Dropdown } from "./Dropdown";
+import { Button } from "./atoms/Button";
 
 interface ListHeaderProps {
   title?: string;

@@ -17,7 +17,8 @@ import {
   isRaceFinished,
   isRaceToday,
 } from "../../utils";
-import { Icon, Text } from "../shared";
+import { Icon } from "../shared/atoms/Icon";
+import { Text } from "../shared/atoms/Text";
 import { SessionCountdown } from "./SessionCountdown";
 import { circuitData } from "../../../assets/circuits/data";
 import { Image } from "expo-image";

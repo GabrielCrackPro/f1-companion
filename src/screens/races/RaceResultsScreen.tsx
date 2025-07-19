@@ -2,7 +2,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { useRoute } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
-import { Text } from "../../components";
+import { Text } from "../../components/shared/atoms/Text";
 import { useRace } from "../../hooks";
 import { RaceRouteProp } from "../../models";
 

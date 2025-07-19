@@ -9,7 +9,8 @@ import {
 import { useCustomTheme } from "../../hooks";
 import { Session } from "../../models";
 import { isSessionFinished } from "../../utils";
-import { Icon, Text } from "../shared";
+import { Icon } from "../shared/atoms/Icon";
+import { Text } from "../shared/atoms/Text";
 import { SessionCountdown } from "./SessionCountdown";
 
 interface SessionItemProps {

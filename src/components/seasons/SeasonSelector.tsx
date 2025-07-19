@@ -5,7 +5,8 @@ import BottomSheet, {
 import { forwardRef, useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 import { useCustomTheme, useSeasonContext } from "../../hooks";
-import { Button, Text } from "../shared";
+import { Button } from "../shared/atoms/Button";
+import { Text } from "../shared/atoms/Text";
 import { SeasonItem } from "./SeasonItem";
 
 interface SeasonSelectorProps {

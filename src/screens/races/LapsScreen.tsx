@@ -1,7 +1,10 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useEffect, useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { DriverTimeCard, List, QuantitySelector, Text } from "../../components";
+import { DriverTimeCard } from "../../components/drivers/DriverTimeCard";
+import { List } from "../../components/shared/List";
+import { QuantitySelector } from "../../components/shared/QuantitySelector";
+import { Text } from "../../components/shared/atoms/Text";
 import { useDrivers, useRace, useSeasonContext } from "../../hooks";
 import {
   LapData,

@@ -10,8 +10,9 @@ import {
 } from "react-native";
 import Animated from "react-native-reanimated";
 import { useCustomTheme } from "../../hooks";
-import { Icon, Text } from "./atoms";
 import { ListHeader } from "./ListHeader";
+import { Icon } from "./atoms/Icon";
+import { Text } from "./atoms/Text";
 
 export interface Filter {
   type: string;

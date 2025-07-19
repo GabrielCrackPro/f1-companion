@@ -4,7 +4,8 @@ import { StyleSheet, View } from "react-native";
 import Animated from "react-native-reanimated";
 import { circuitData } from "../../../assets/circuits/data";
 import { Circuit } from "../../models";
-import { Button, Text } from "../shared";
+import { Button } from "../shared/atoms/Button";
+import { Text } from "../shared/atoms/Text";
 
 interface CircuitInfoProps {
   circuit?: Circuit;

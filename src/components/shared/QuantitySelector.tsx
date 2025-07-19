@@ -4,9 +4,10 @@ import AnimatedReanimated, {
   interpolateColor,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { useAnimatedTheme } from "../../contexts";
-import { Button, Text } from "./atoms";
 import { darkTheme, lightTheme } from "../../constants";
+import { useAnimatedTheme } from "../../contexts";
+import { Button } from "./atoms/Button";
+import { Text } from "./atoms/Text";
 
 interface QuantitySelectorProps {
   value: number;

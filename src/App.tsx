@@ -1,9 +1,10 @@
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
-import { AppContent, ErrorBoundary } from "./components";
 import { AnimatedThemeProvider } from "./contexts/AnimatedThemeContext";
 import { configureReanimatedLogger } from "react-native-reanimated";
+import { ErrorBoundary } from "./components/ErrorBoundary";
+import { AppContent } from "./components/AppContent";
 
 configureReanimatedLogger({
   strict: false,

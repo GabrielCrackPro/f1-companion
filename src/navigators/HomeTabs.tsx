@@ -4,10 +4,12 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
-import { Header } from "../components";
-import { Icon } from "../components/shared/atoms";
+import { Header } from "../components/shared/Header";
+import { Icon } from "../components/shared/atoms/Icon";
 import { ROUTE_ICON_MAP } from "../constants/routes";
-import { DriversScreen, RacesScreen, SettingsScreen } from "../screens";
+import { DriversScreen } from "../screens/drivers/DriversScreen";
+import { RacesScreen } from "../screens/races/RacesScreen";
+import { SettingsScreen } from "../screens/SettingsScreen";
 import { HomeScreen } from "../screens/HomeScreen";
 
 const Tab = createBottomTabNavigator();

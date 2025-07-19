@@ -11,7 +11,7 @@ import Animated, {
 import { useCustomTheme } from "../../hooks";
 import { Session } from "../../models";
 import { formatRemainingTime, getRemainingTime } from "../../utils";
-import { Text } from "../shared";
+import { Text } from "../shared/atoms/Text";
 
 interface SessionCountdownProps {
   showLabel?: boolean;

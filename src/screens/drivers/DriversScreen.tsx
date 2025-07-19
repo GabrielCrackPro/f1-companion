@@ -10,7 +10,10 @@ import Animated, {
   interpolateColor,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { Icon, List, ScreenWrapper, Text } from "../../components";
+import { Icon } from "../../components/shared/atoms/Icon";
+import { List } from "../../components/shared/List";
+import { ScreenWrapper } from "../../components/shared/ScreenWrapper";
+import { Text } from "../../components/shared/atoms/Text";
 import { darkTheme, lightTheme } from "../../constants";
 import { useAnimatedTheme } from "../../contexts";
 import { useDrivers } from "../../hooks";

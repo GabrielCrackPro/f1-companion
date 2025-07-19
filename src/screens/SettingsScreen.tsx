@@ -1,5 +1,6 @@
 import { View } from "react-native";
-import { ScreenWrapper, SettingToggle } from "../components";
+import { ScreenWrapper } from "../components/shared/ScreenWrapper";
+import { SettingToggle } from "../components/shared/SettingToggle";
 import { useCustomTheme } from "../hooks";
 import { useAnimatedTheme } from "../contexts";
 

@@ -2,7 +2,9 @@ import { useState } from "react";
 import { StyleSheet, useWindowDimensions, View } from "react-native";
 import { useCustomTheme, useSeasonContext } from "../../hooks";
 import { isSeasonFinished } from "../../utils";
-import { Button, Icon, Text } from "../shared";
+import { Button } from "../shared/atoms/Button";
+import { Icon } from "../shared/atoms/Icon";
+import { Text } from "../shared/atoms/Text";
 
 interface RaceListEmptyProps {
   title?: string;

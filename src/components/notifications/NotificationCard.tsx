@@ -2,7 +2,8 @@ import { StyleSheet, View, TouchableOpacity } from "react-native";
 import Animated, { FadeInDown, Layout } from "react-native-reanimated";
 import { useCustomTheme } from "../../hooks";
 import { NotificationType, StoredNotification } from "../../models";
-import { Text, Icon } from "../shared";
+import { Text } from "../shared/atoms/Text";
+import { Icon } from "../shared/atoms/Icon";
 import { formatDate, formatTime } from "../../utils";
 
 interface NotificationCardProps {

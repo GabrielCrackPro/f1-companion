@@ -7,7 +7,9 @@ import {
 } from "react-native-reanimated";
 import { useCustomTheme } from "../../hooks";
 import { Driver, LapTiming } from "../../models";
-import { AnimatedCard, Button, Text } from "../shared";
+import { AnimatedCard } from "../shared/AnimatedCard";
+import { Button } from "../shared/atoms/Button";
+import { Text } from "../shared/atoms/Text";
 
 interface DriverTimeCardProps {
   driver: Driver;

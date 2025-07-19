@@ -5,7 +5,8 @@ import { useCustomTheme, useSeasonContext } from "../../hooks";
 import { useCalendar } from "../../hooks/useCalendar";
 import { useRace } from "../../hooks/useRace";
 import { RaceNavigationProp, RaceRouteProp } from "../../models";
-import { Button, Text } from "../shared";
+import { Button } from "../shared/atoms/Button";
+import { Text } from "../shared/atoms/Text";
 
 interface RaceHeaderProps {
   isResults?: boolean;

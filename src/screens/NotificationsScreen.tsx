@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { interpolateColor, useAnimatedStyle } from "react-native-reanimated";
-import { Button, List, NotificationCard } from "../components";
+import { Button } from "../components/shared/atoms/Button";
+import { List } from "../components/shared/List";
+import { NotificationCard } from "../components/notifications/NotificationCard";
 import { darkTheme, lightTheme } from "../constants";
 import { useAnimatedTheme } from "../contexts";
 import { useNotifications } from "../hooks";

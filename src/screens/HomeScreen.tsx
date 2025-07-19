@@ -1,5 +1,7 @@
 import { View } from "react-native";
-import { Button, ScreenWrapper, Text } from "../components";
+import { Button } from "../components/shared/atoms/Button";
+import { ScreenWrapper } from "../components/shared/ScreenWrapper";
+import { Text } from "../components/shared/atoms/Text";
 import { useNotifications } from "../hooks";
 
 export const HomeScreen: React.FC = () => {

@@ -6,8 +6,10 @@ import {
 import { StyleProp, ViewStyle } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useCustomTheme, useSeasonContext } from "../../hooks";
-import { Button, Logo, Text } from "./atoms";
 import { RaceNavigationProp } from "../../models";
+import { Button } from "./atoms/Button";
+import { Logo } from "./atoms/Logo";
+import { Text } from "./atoms/Text";
 
 interface HeaderProps {
   route: RouteProp<ParamListBase>;

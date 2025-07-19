@@ -2,13 +2,11 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import * as Browser from "expo-web-browser";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
-import {
-  Button,
-  CircuitInfo,
-  List,
-  SessionCountdown,
-  SessionItem,
-} from "../../components";
+import { Button } from "../../components/shared/atoms/Button";
+import { CircuitInfo } from "../../components/races/CircuitInfo";
+import { List } from "../../components/shared/List";
+import { SessionCountdown } from "../../components/races/SessionCountdown";
+import { SessionItem } from "../../components/races/SessionItem";
 import { useRace } from "../../hooks";
 import { RaceNavigationProp, RaceRouteProp, Session } from "../../models";
 import { isSessionFinished } from "../../utils";

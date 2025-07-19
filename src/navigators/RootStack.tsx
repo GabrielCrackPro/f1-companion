@@ -1,16 +1,15 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
-import { RaceHeader, SeasonSelector } from "../components";
+import { RaceHeader } from "../components/races/RaceHeader";
+import { SeasonSelector } from "../components/seasons/SeasonSelector";
 import { useSeasonContext } from "../hooks";
-import {
-  DriverDetailScreen,
-  LapsScreen,
-  NotificationsScreen,
-  PitStopsScreen,
-  RaceDetailScreen,
-  RaceResultsScreen,
-  SeasonReasultsScreen,
-} from "../screens";
+import { DriverDetailScreen } from "../screens/drivers/DriverDetailScreen";
+import { LapsScreen } from "../screens/races/LapsScreen";
+import { NotificationsScreen } from "../screens/NotificationsScreen";
+import { PitStopsScreen } from "../screens/races/PitStopsScreen";
+import { RaceDetailScreen } from "../screens/races/RaceDetailScreen";
+import { RaceResultsScreen } from "../screens/races/RaceResultsScreen";
+import { SeasonReasultsScreen } from "../screens/season/SeasonReasultsScreen";
 import { HomeTabs } from "./HomeTabs";
 
 export const RootStack = () => {

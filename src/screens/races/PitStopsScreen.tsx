@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import { Text } from "../../components";
+import { Text } from "../../components/shared/atoms/Text";
 
 export const PitStopsScreen: React.FC = () => {
   return (

@@ -1,6 +1,7 @@
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { useCustomTheme } from "../../hooks";
-import { Icon, Text } from "../shared";
+import { Icon } from "../shared/atoms/Icon";
+import { Text } from "../shared/atoms/Text";
 
 interface SeasonItemProps {
   season: number;

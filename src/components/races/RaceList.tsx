@@ -4,7 +4,7 @@ import { useRaces, useSeasonContext } from "../../hooks";
 import { racesSortFields } from "../../mappers";
 import { Race } from "../../models";
 import { isSeasonFinished } from "../../utils";
-import { List } from "../shared";
+import { List } from "../shared/List";
 import { RaceItem } from "./RaceItem";
 import { RaceListEmpty } from "./RaceListEmpty";
 
